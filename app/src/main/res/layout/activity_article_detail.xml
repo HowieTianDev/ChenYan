@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.howietian.chenyan.home.ArticleDetailActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_article"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+        app:title="推文详情"
+        app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layout_below="@+id/tb_article">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="辰言2017活动安排"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/title"
+
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/tv_upTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="2017-7-2"
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="辰小言"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/bodySmall" />
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/banner1" />
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:lineSpacingExtra="8dp"
+                android:text="活动主题：本次晚会节目投标题材不限，联系生活实际，符合当代学生的精神风貌，有积极向上的精神姿态。\n海选对象：全体在校高一、高二学生。\n活动时间：\n报名截止时间：2016年12月28日\n活动预期时间：2017年01月05日"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/bodyNormal" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:id="@+id/tv_comment_num"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="评论(38)"
+                   android:textSize="@dimen/bodyLarge"
+                   android:layout_marginTop="40dp"
+                   android:layout_marginBottom="10dp"
+                   />
+               <TextView
+                   android:id="@+id/tv_like_num"
+                   android:layout_width="0dp"
+                   android:layout_weight="1"
+                   android:layout_height="wrap_content"
+                   android:text="赞(38)"
+                   android:gravity="end"
+                   android:textColor="@color/colorPrimary"
+                   android:textSize="@dimen/bodyLarge"
+                   android:layout_marginTop="40dp"
+                   android:layout_marginBottom="10dp"
+
+                   />
+           </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_article_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/scrollView"
+                ></android.support.v7.widget.RecyclerView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+<View
+    android:layout_above="@+id/ll_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/divider"
+    />
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        >
+        <TextView
+            android:id="@+id/tv_send_comment"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:hint="写下你的观点..."
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/bodySmall"
+            android:textColor="@color/dark"
+            android:paddingLeft="10dp"
+            android:background="@drawable/input_bg"
+            />
+        <ImageView
+            android:id="@+id/iv_collect"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_favorite_border_grey_500_24dp"
+            android:layout_marginRight="10dp"
+            />
+        <ImageView
+            android:id="@+id/iv_like"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_thumb_up_grey_500_24dp"
+            android:layout_marginRight="10dp"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

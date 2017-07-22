@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ff9800</color>
+    <color name="colorPrimaryDark">#f57c00</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#ffffff</color>
+    <color name="dark">#333333</color>
+    <color name="grey">#f2f2f2</color>
+    <color name="darkGrey">#dddddd</color>
+    <color name="divider">#e5e5e5</color>
+    <color name="blue">#0288d1</color>
+    <color name="transparent">#00000000</color>
+    <color name="unused">#9e9e9e</color>
+
+    <!--朋友圈色值-->
+    <color name="nick">#517fae</color>
+    <color name="item_bottom_text">#8e8e8e</color>
+    <color name="item_showmore_click">#c6c6c6</color>
+    <color name="line_bg">#e5e5e5</color>
+    <color name="normal_font_color">#1A1A1A</color>
+
+
+</resources>

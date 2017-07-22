@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <!--没有ActionBar主题-->
+    <style name="SearchTheme" parent="AppTheme">
+        <item name="android:textColor">#000</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="searchHintIcon">@null</item>
+        <!--设置menu中item的图标颜色-->
+        <item name="android:textColorSecondary">#ffffff</item>
+        <item name="searchViewStyle">@style/Widget.SearchView</item>
+    </style>
+    <!--引入自定义的searchView-->
+    <style name="Widget.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="defaultQueryHint">搜索推文/活动</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
+
+    <!--标题与NavigationIcon的距离-->
+    <style name="Toolbar.Distance" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+    <style name="rippleStyle">
+        <item name="android:clickable">true</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+    <!--我的item样式-->
+    <style name="ItemExample" parent="rippleStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/dark</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawableRight">@drawable/ic_keyboard_arrow_right_grey_500_24dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="InputBg">
+        <item name="android:background">@drawable/et_grey_bg</item>
+        <item name="android:layout_marginRight">26dp</item>
+        <item name="android:layout_marginLeft">26dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!-- ToolBar菜单样式 -->
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="actionMenuTextColor">@color/white</item> <!--  敲定颜色-->
+        <item name="android:textSize">18sp</item> <!--  搞掂字体大小-->
+    </style>
+
+</resources>

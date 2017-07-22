@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/input_comment">
+
+        <EditText
+            android:id="@+id/et_comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@null"
+            android:gravity="start"
+            android:hint="来说两句吧..."
+            android:lineSpacingExtra="5dp"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            android:textSize="@dimen/bodyNormal" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/blue"
+        android:text="发送"
+        android:textColor="@color/white" />
+</LinearLayout>

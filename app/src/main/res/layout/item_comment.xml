@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/divider"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_account_circle_blue_grey_100_36dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_nickName"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="辰小言"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/caption" />
+
+            <TextView
+                android:id="@+id/tv_create_time"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:text="2017-7-2"
+                android:textSize="11sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end|center_vertical"
+                >
+                <TextView
+                    android:id="@+id/tv_like_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="0"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="end"
+                    />
+                <ImageView
+                    android:id="@+id/iv_like"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_thumb_up_grey_500_24dp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="5dp"
+        android:lineSpacingExtra="5dp"
+        android:text="128G的确不够用，我现在用的是128G的，经常提示内存不足，所以建议能买大的就买的大的吧"
+        android:textColor="@color/dark"
+        android:textSize="@dimen/caption" />
+
+
+</LinearLayout>

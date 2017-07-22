@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        tools:context="com.howietian.chenyan.home.PublishAActivity">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tb_pub_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:title="创建活动"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+            app:theme="@style/ToolbarTheme"
+            ></android.support.v7.widget.Toolbar>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="10dp"
+            >
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                >
+                <EditText
+                    android:id="@+id/et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/title"
+                    android:textColor="@color/dark"
+                    android:textStyle="bold"
+                    android:hint="请输入活动标题"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_show_time"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="5"
+                    android:gravity="center_vertical"
+                    android:hint="请选择报名截止日期"
+                    android:textSize="@dimen/title"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_select_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/grey"
+                    android:text="选择日期"
+                    />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"
+                android:layout_marginTop="10dp"
+                />
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="10dp"
+                android:textSize="@dimen/bodyLarge"
+                android:textColor="@color/dark"
+                android:lineSpacingExtra="8dp"
+                android:padding="6dp"
+                android:background="@null"
+                android:text=""
+                android:gravity="start"
+                android:scrollbars="vertical"
+                android:hint="请输入活动描述"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                >
+
+                <ImageView
+                    android:id="@+id/iv_photo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/add_photo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="请添加一张封面图片"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/caption"
+                    />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/divider"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>

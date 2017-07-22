@@ -1,0 +1,315 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.howietian.chenyan.circle.CircleFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tb_circle"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:title="圈子"
+            app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout_circle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView_circle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <cn.bingoogolapple.bgabanner.BGABanner
+                    android:id="@+id/bgaBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@color/grey"
+                    android:scaleType="fitXY"
+                    android:visibility="visible"
+                    app:banner_indicatorGravity="bottom|center_horizontal"
+                    app:banner_pointAutoPlayAble="true"
+                    app:banner_pointAutoPlayInterval="4000"
+                    app:banner_transitionEffect="defaultEffect"
+                    app:layout_scrollFlags="scroll"></cn.bingoogolapple.bgabanner.BGABanner>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    app:layout_scrollFlags="scroll">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="综合"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="体育"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="情感"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="国学"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="竞赛"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="精华"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="文艺"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="竞赛"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="闲情"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="更多"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_circle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
+
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab_pub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white_24dp"
+        fab:fab_colorNormal="@color/colorPrimary"
+        fab:fab_colorPressed="@color/colorPrimary"
+        fab:fab_colorRipple="@color/colorPrimaryDark" />
+
+
+</android.support.design.widget.CoordinatorLayout>

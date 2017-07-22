@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="title">21sp</dimen>
+    <dimen name="bodySmall">15sp</dimen>
+    <dimen name="bodyNormal">16sp</dimen>
+    <dimen name="bodyLarge">17sp</dimen>
+    <dimen name="caption">13sp</dimen>
+
+</resources>

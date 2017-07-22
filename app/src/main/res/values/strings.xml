@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">辰言</string>
+    <string name="square">首页</string>
+    <string name="circle">圈子</string>
+    <string name="focus">聚焦</string>
+    <string name="rank">排行</string>
+    <string name="me">我的</string>
+    <string name="on_join">正在报名</string>
+    <string name="end_join">报名截止</string>
+    <string name="joined">已报名</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="city">
+        <item>香港</item>
+        <item>杭州</item>
+        <item>武汉</item>
+        <item>台湾</item>
+        <item>澳门</item>
+        <item>北京</item>
+        <item>上海</item>
+        <item>平遥</item>
+        <item>太原</item>
+        <item>香福建省辽阔的附件</item>
+        <item>平遥</item>
+    </string-array>
+</resources>

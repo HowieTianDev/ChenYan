@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.howietian.chenyan.Main2Activity"
+    >
+    <com.howietian.chenyan.views.ClickShowMoreLayout
+        android:id="@+id/clickShowMore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:click_text="阅读全文"
+    />
+    <Button
+        android:id="@+id/btn_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击按钮"
+        />
+    <com.like.LikeButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:icon_size="25dp"
+        app:icon_type="heart"
+        app:like_drawable="@drawable/ic_thumb_up_orange_500_24dp"
+        app:unlike_drawable="@drawable/ic_thumb_up_grey_500_24dp"
+        app:circle_start_color="@color/colorPrimary"
+        app:circle_end_color="@color/colorPrimaryDark"
+        app:dots_primary_color="@color/colorAccent"
+        app:dots_secondary_color="@color/colorPrimary"
+        />
+    <com.howietian.chenyan.views.PraiseWidget
+        android:id="@+id/praisewidget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:click_bg_color="@color/darkGrey"
+        app:font_color="@color/nick"
+        app:like_icon="@drawable/ic_thumb_up_blue_500_18dp"
+        />
+    <EditText
+        android:id="@+id/edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.howietian.chenyan.views.CommentWidget
+        android:id="@+id/commentWidget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+

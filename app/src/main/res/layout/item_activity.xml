@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/banner4" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:paddingTop="5dp"
+                android:text="辰言2017店庆活动"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/bodyLarge" />
+
+            <TextView
+                android:id="@+id/intro"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="4dp"
+                android:lines="2"
+                android:text="辰言2017店庆活动，兹定于XXX年XXX月XXX日举行"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_sign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:background="@drawable/sign_border"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="正在报名"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/caption"
+
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/activity_like"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|end"
+                        android:paddingRight="2dp"
+                        android:text="0"
+                        android:textSize="@dimen/bodySmall" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_thumb_up_orange_500_24dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/activity_comment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1234"
+                        android:gravity="center_vertical|end"
+                        android:paddingRight="2dp"
+                        android:text="0"
+                        android:textSize="@dimen/bodySmall" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_message_grey_400_24dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/grey" />
+
+</LinearLayout>
