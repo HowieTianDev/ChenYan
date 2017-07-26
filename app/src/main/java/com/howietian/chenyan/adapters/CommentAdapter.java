@@ -55,6 +55,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
+
         //    设置点赞的标志
         final boolean[] isLike = {false};
         final Comment comment = comments.get(position);
@@ -92,7 +93,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             holder.ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
         }
 
-
+        likeIdList.clear();
         holder.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

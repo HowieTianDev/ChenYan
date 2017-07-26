@@ -15,6 +15,7 @@ import com.howietian.chenyan.focus.FocusFragment;
 import com.howietian.chenyan.home.HomeFragment;
 import com.howietian.chenyan.me.MeFragment;
 import com.howietian.chenyan.rank.RankFragment;
+import com.howietian.chenyan.utils.UIHelper;
 
 import butterknife.Bind;
 
@@ -162,5 +163,18 @@ public class MainActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
 
         Log.e("onSaveInstanceState",outState.toString());
+    }
+
+
+    private long lastClickBackTime;
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - lastClickBackTime > 2000) { // 后退阻断
+            UIHelper.ToastMessage("再点一次退出");
+            lastClickBackTime = System.currentTimeMillis();
+        } else { // 关掉app
+            super.onBackPressed();
+        }
     }
 }

@@ -7,10 +7,13 @@ import android.support.annotation.NonNull;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.howietian.chenyan.Listener.ClickableSpanEx;
 import com.howietian.chenyan.Listener.CommentClick;
+import com.howietian.chenyan.circle.CircleFragment;
 import com.howietian.chenyan.entities.DComment;
 
 /**
@@ -21,7 +24,9 @@ public class CommentWidget extends TextView {
     //    用户名颜色
     private int textColor = 0xff517fae;
     private static final int textSize = 14;
+    private CircleFragment fragment = CircleFragment.newInstance("Circle Fragment");
     SpannableStringBuilderCompat mSpannableStringBuilderCompat;
+
 
     public CommentWidget(Context context) {
         this(context, null);
@@ -64,7 +69,14 @@ public class CommentWidget extends TextView {
      * @param info
      */
 
-    private void createCommentStringBuilder(@NonNull DComment info) {
+    private void createCommentStringBuilder(@NonNull final DComment info) {
+//        this.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(getContext(), info.toString(), Toast.LENGTH_LONG).show();
+//               // fragment.comment();
+//            }
+//        });
         if (mSpannableStringBuilderCompat == null) {
             mSpannableStringBuilderCompat = new SpannableStringBuilderCompat();
         } else {

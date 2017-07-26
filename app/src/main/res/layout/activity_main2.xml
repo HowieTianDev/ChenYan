@@ -48,5 +48,10 @@
         android:id="@+id/commentWidget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <com.lzy.ninegrid.NineGridView
+        android:id="@+id/nineGridView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></com.lzy.ninegrid.NineGridView>
 </LinearLayout>
 

@@ -1,8 +1,10 @@
 package com.howietian.chenyan.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
@@ -15,8 +17,9 @@ public class Dynamic extends BmobObject {
     private ArrayList<String> likeId;
     private BmobRelation like;
     private String type;
-//    这个东西用来做判定评论框是否可见
+    //    这个东西用来做判定评论框是否可见
     private Integer commentNum;
+    private List<String> imageUrls;
 
     public Dynamic() {
     }
@@ -69,6 +72,15 @@ public class Dynamic extends BmobObject {
         this.commentNum = commentNum;
     }
 
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
+
     @Override
     public String toString() {
         return "Dynamic{" +
@@ -78,6 +90,7 @@ public class Dynamic extends BmobObject {
                 ", like=" + like +
                 ", type='" + type + '\'' +
                 ", commentNum=" + commentNum +
+                ", imageUrls=" + imageUrls +
                 '}';
     }
 }

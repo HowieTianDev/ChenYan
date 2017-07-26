@@ -11,15 +11,17 @@ public class DComment extends BmobObject {
     private User author;
     private User reply;
     private Dynamic dynamic;
+    private String dynamicId;
 
     public DComment() {
     }
 
-    public DComment(String content, User author, User reply, Dynamic dynamic) {
+    public DComment(String content, User author, User reply, Dynamic dynamic, String dynamicId) {
         this.content = content;
         this.author = author;
         this.reply = reply;
         this.dynamic = dynamic;
+        this.dynamicId = dynamicId;
     }
 
     public String getContent() {
@@ -54,6 +56,13 @@ public class DComment extends BmobObject {
         this.dynamic = dynamic;
     }
 
+    public String getDynamicId() {
+        return dynamicId;
+    }
+
+    public void setDynamicId(String dynamicId) {
+        this.dynamicId = dynamicId;
+    }
 
     @Override
     public String toString() {
@@ -62,6 +71,7 @@ public class DComment extends BmobObject {
                 ", author=" + author +
                 ", reply=" + reply +
                 ", dynamic=" + dynamic +
+                ", dynamicId='" + dynamicId + '\'' +
                 '}';
     }
 }

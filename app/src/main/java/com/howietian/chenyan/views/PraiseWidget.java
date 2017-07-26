@@ -16,13 +16,14 @@ import com.howietian.chenyan.Listener.PraiseClick;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.entities.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by 83624 on 2017/7/19.
  */
 
-public class PraiseWidget extends TextView {
+public class PraiseWidget extends android.support.v7.widget.AppCompatTextView {
 
     //    点赞名字默认展示的颜色
     private int textColor = 0xff517fae;
@@ -33,7 +34,7 @@ public class PraiseWidget extends TextView {
     //    默认点击背景
     private int clickBg = R.color.transparent;
 
-    private List<User> datas;
+    private List<User> datas ;
     /**
      * 返回用户定义的item的大小，默认返回1代表item的数量，最大size就是最大item值
      */
@@ -132,7 +133,7 @@ public class PraiseWidget extends TextView {
         super.onDetachedFromWindow();
         praiseCache.evictAll();
         if (praiseCache.size() == 0) {
-            Log.e("HHH", "clear cache success!");
+
         }
     }
 }

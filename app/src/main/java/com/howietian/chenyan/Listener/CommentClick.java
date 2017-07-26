@@ -29,7 +29,7 @@ public class CommentClick extends ClickableSpanEx {
     public void onClick(View widget) {
         if (mUserInfo != null)
             Toast.makeText(mContext, "当前用户名是： " + mUserInfo.getNickName() + "   它的ID是： " + mUserInfo.getObjectId(),
-                           Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show();
     }
 
     @Override

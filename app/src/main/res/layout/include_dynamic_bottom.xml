@@ -8,46 +8,82 @@
 
     <LinearLayout
         android:id="@+id/menu_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginLeft="74dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="-5dp"
         android:layout_marginBottom="-5dp"
-        >
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="-5dp">
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="赞("
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/bodyLarge"
+
+
+            />
+        <TextView
+            android:id="@+id/tv_like_num"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/bodyLarge"
+
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text=")"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/bodyLarge"
+
+
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
 
             <com.like.LikeButton
                 android:id="@+id/like"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/comment"
-                app:icon_size="18dp"
-                app:like_drawable="@drawable/ic_thumb_up_orange_500_18dp"
-                app:unlike_drawable="@drawable/ic_thumb_up_grey_500_18dp"
-                app:circle_start_color="@color/colorPrimary"
                 app:circle_end_color="@color/colorPrimaryDark"
+                app:circle_start_color="@color/colorPrimary"
                 app:dots_primary_color="@color/colorAccent"
                 app:dots_secondary_color="@color/colorPrimary"
-                />
+                app:icon_size="24dp"
+                app:like_drawable="@drawable/ic_thumb_up_orange_500_24dp"
+                app:unlike_drawable="@drawable/ic_thumb_up_grey_400_24dp" />
+
             <com.like.LikeButton
                 android:id="@+id/comment"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                app:icon_size="18dp"
-                app:icon_type="heart"
-                app:like_drawable="@drawable/ic_message_grey_500_18dp"
-                app:unlike_drawable="@drawable/ic_message_grey_500_18dp"
-                app:circle_start_color="@color/colorPrimary"
                 app:circle_end_color="@color/colorPrimaryDark"
+                app:circle_start_color="@color/colorPrimary"
                 app:dots_primary_color="@color/colorAccent"
                 app:dots_secondary_color="@color/colorPrimary"
+                app:icon_size="24dp"
+                app:icon_type="heart"
                 app:is_enabled="true"
-                />
+                app:like_drawable="@drawable/ic_message_grey_400_24dp"
+                app:unlike_drawable="@drawable/ic_message_grey_400_24dp" />
 
 
+        </LinearLayout>
     </LinearLayout>
 
     <!--praise && comment-->
@@ -58,6 +94,8 @@
         android:layout_below="@id/menu_layout"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/comment_praise"
         android:orientation="vertical">
 
@@ -67,12 +105,12 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="2dp"
             android:lineSpacingMultiplier="1"
+            android:paddingBottom="3dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            app:click_bg_color="@color/darkGrey"
-            />
+            android:visibility="gone"
+            app:click_bg_color="@color/darkGrey" />
 
         <View
             android:id="@+id/divider"
@@ -82,7 +120,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:background="@color/line_bg"
-            />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/comment_layout"
@@ -90,15 +128,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="8dp"
-            tools:background="@android:color/holo_red_dark"/>
+            tools:background="@android:color/holo_red_dark" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp"
-        android:background="@color/grey"
         android:layout_marginTop="20dp"
-        />
+        android:background="@color/grey" />
 
 </LinearLayout>

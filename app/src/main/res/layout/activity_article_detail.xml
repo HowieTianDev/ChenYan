@@ -140,7 +140,7 @@
             android:layout_height="match_parent"
             android:hint="写下你的观点..."
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
@@ -151,17 +151,17 @@
             />
         <ImageView
             android:id="@+id/iv_collect"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:src="@drawable/ic_favorite_border_grey_500_24dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             />
         <ImageView
             android:id="@+id/iv_like"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:src="@drawable/ic_thumb_up_grey_500_24dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="16dp"
             />
     </LinearLayout>
 

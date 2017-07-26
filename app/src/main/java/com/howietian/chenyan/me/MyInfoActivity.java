@@ -2,8 +2,10 @@ package com.howietian.chenyan.me;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -436,6 +438,7 @@ public class MyInfoActivity extends BaseActivity {
 
     private void upLoadAvatar() {
         File file = new File(cropFileUri.getPath());
+        Log.e("PHOTO",file.getPath());
         bf = new BmobFile(file);
         bf.uploadblock(new UploadFileListener() {
             @Override
@@ -472,6 +475,7 @@ public class MyInfoActivity extends BaseActivity {
 
 
     }
+
 
     //利用正则表达式判断只为数字、字母、下划线、中文
     public boolean isStringFormatCorrect(String str) {

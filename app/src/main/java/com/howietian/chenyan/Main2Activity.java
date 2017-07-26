@@ -1,12 +1,16 @@
 package com.howietian.chenyan;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +20,15 @@ import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.views.ClickShowMoreLayout;
 import com.howietian.chenyan.views.CommentWidget;
 import com.howietian.chenyan.views.PraiseWidget;
+import com.lzy.ninegrid.ImageInfo;
+import com.lzy.ninegrid.NineGridView;
+import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.filter.Filter;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +37,7 @@ import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 
 public class Main2Activity extends BaseActivity {
+    private static final int REQUEST_CODE_CHOOSE = 0;
     @Bind(R.id.clickShowMore)
     ClickShowMoreLayout clickShowMoreLayout;
     @Bind(R.id.btn_test)
@@ -35,6 +48,8 @@ public class Main2Activity extends BaseActivity {
     EditText editText;
     @Bind(R.id.commentWidget)
     CommentWidget commentWidget;
+    @Bind(R.id.nineGridView)
+    NineGridView nineGridView;
 
     private List<User> users = new ArrayList<>();
 
@@ -77,8 +92,17 @@ public class Main2Activity extends BaseActivity {
 //            users.add(user);
 //        }
 //        praiseWidget.setDatas(users);
-        DComment comment1 = new DComment("7777777",BmobUser.getCurrentUser(User.class),BmobUser.getCurrentUser(User.class),null);
+        DComment comment1 = new DComment("7777777",BmobUser.getCurrentUser(User.class),BmobUser.getCurrentUser(User.class),null,null);
         commentWidget.setCommentText(comment1);
+       // nineTest();
+        Matisse.from(Main2Activity.this)
+                .choose(MimeType.allOf())
+                .countable(true)
+                .maxSelectable(9)
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .thumbnailScale(0.85f)
+                .imageEngine(new GlideEngine())
+                .forResult(REQUEST_CODE_CHOOSE);
     }
 
     private void spanTest() {
@@ -102,10 +126,37 @@ public class Main2Activity extends BaseActivity {
 
 
     private void commentTest(){
-        DComment comment = new DComment("66666666", BmobUser.getCurrentUser(User.class),null,null);
+        DComment comment = new DComment("66666666", BmobUser.getCurrentUser(User.class),null,null,null);
         commentWidget.setCommentText(comment);
 
     }
+    private void nineTest(){
+        List<ImageInfo> imageInfoList = new ArrayList<>();
+        for(int i = 0;i<9;i++){
+            ImageInfo imageInfo = new ImageInfo();
+            imageInfo.setBigImageUrl("http://img1a.xgo-img.com.cn/pics/1538/a1537491.jpg");
+            imageInfo.setThumbnailUrl("http://img1a.xgo-img.com.cn/pics/1538/a1537491.jpg");
+            imageInfoList.add(imageInfo);
+        }
+
+        nineGridView.setAdapter(new NineGridViewClickAdapter(this,imageInfoList));
+    }
+    static class ImcageInfo{
+        private URL thumbnailUrl;
+        private URL bigImageUrl;
+    }
+
+    List<Uri> mSelected;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
+            mSelected = Matisse.obtainResult(data);
+            Log.e("Matisse", "mSelected: " + mSelected);
+        }
+    }
+
 
 
 }

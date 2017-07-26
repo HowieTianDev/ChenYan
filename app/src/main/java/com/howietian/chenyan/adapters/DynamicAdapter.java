@@ -1,28 +1,20 @@
 package com.howietian.chenyan.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.howietian.chenyan.R;
-import com.howietian.chenyan.app.Constant;
-import com.howietian.chenyan.entities.Comment;
+import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.DComment;
 import com.howietian.chenyan.entities.Dynamic;
 import com.howietian.chenyan.entities.User;
@@ -30,15 +22,20 @@ import com.howietian.chenyan.views.ClickShowMoreLayout;
 import com.howietian.chenyan.views.CommentWidget;
 import com.howietian.chenyan.views.PraiseWidget;
 import com.like.LikeButton;
+import com.like.OnLikeListener;
+import com.lzy.ninegrid.ImageInfo;
+import com.lzy.ninegrid.NineGridView;
+import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -47,102 +44,195 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
+
     private List<Dynamic> dynamicList = new ArrayList<>();
-    private List<DComment> dComments = new ArrayList<>();
+
+    //   评论列表Map
+    private Map<String, List<DComment>> commentMap = new HashMap<>();
+    //   点赞用户集合
+    private List<List<User>> praiseUserList = new ArrayList<>();
+
+    private List<DComment> comments = new ArrayList<>();
     private List<User> users = new ArrayList<>();
-    private ArrayList<String> likeId = new ArrayList<>();
 
-    private static final int NORMAL_TYPE = 0;
-    private static final int FOOTER_TYPE = 1;
+    private onCommentClickListener mOnCommentListener;
+    private onPraiseClickListener mOnPraiseClikcListener;
+    private onCommentReplyClickListener mOnCommentReplyClickListener;
 
-    private static final int PAGE_ITEM_COUNT = Constant.LIMIT;
+    public static final int REFRESH_PRAISE = 0;
+    public static final int REFRESH_COMMENT = 1;
+    public static final int REPLY_COMMENT = 2;
+    private static final String TAG = "dynamic adapter";
+    private Handler handler;
 
-    public DynamicAdapter(Context context, List<Dynamic> list) {
+
+    public DynamicAdapter(Context context, List<Dynamic> list, Map<String, List<DComment>> commentMap, List<List<User>> userList, Handler handler) {
         this.context = context;
         this.dynamicList = list;
+        this.commentMap = commentMap;
+        this.praiseUserList = userList;
+        this.handler = handler;
+    }
+
+
+    //    点击评论的接口
+    public interface onCommentClickListener {
+        void onClick(int position);
+    }
+
+    public void setOnCommentListener(onCommentClickListener listener) {
+        this.mOnCommentListener = listener;
+    }
+
+    //    点击评论回复的借口
+    public interface onCommentReplyClickListener {
+        void onReplyClick();
+    }
+
+    public void setOnCommentReplyClickListener(onCommentReplyClickListener listener) {
+        this.mOnCommentReplyClickListener = listener;
+    }
+
+    //  点赞的接口
+    public interface onPraiseClickListener {
+        void onLikeClick(int position);
+
+        void onUnLikeClick(int position);
+    }
+
+    public void setOnPraiseClickListener(onPraiseClickListener listener) {
+        this.mOnPraiseClikcListener = listener;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == NORMAL_TYPE) {
-            View view = LayoutInflater.from(context).inflate(R.layout.dynamic_empty_content, parent, false);
-            DMyViewHolder holder = new DMyViewHolder(view);
-            return holder;
-        } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.footer_view, parent, false);
-            FootViewHolder footer = new FootViewHolder(view);
-            return footer;
-        }
+
+        View view = LayoutInflater.from(context).inflate(R.layout.dynamic_empty_content, parent, false);
+        DMyViewHolder holder = new DMyViewHolder(view);
+        return holder;
 
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+//        不用这个方法
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position, List<Object> payloads) {
+        final Dynamic dynamic = dynamicList.get(position);
 
 
-//        dynamic.setCommentNum(new Integer(1));
-//        dynamic.setLikeId(likeId);
+        List<DComment> commentList = commentMap.get(dynamic.getObjectId());
+        if (commentList == null) {
+            ((DMyViewHolder) holder).commentAndPraiseLayout.setVisibility(View.GONE);
+        } else {
+            ((DMyViewHolder) holder).commentAndPraiseLayout.setVisibility(View.VISIBLE);
+        }
+        Log.e("HHHH", "onBindViewHolder");
+
+        if (payloads.isEmpty()) {
 
 
-
-        if (holder instanceof DMyViewHolder) {
-            final Dynamic dynamic = dynamicList.get(position);
-            setCommentPraiseLayoutVisibility(dynamic, ((DMyViewHolder) holder));
-            addCommentWidget(dComments, ((DMyViewHolder) holder));
             ((DMyViewHolder) holder).nick.setText(dynamic.getUser().getNickName());
-            ((DMyViewHolder) holder).avatar.setImageResource(R.drawable.banner1);
+            if (dynamic.getUser().getAvatar() != null) {
+                Glide.with(context).load(dynamic.getUser().getAvatar().getUrl()).into(((DMyViewHolder) holder).avatar);
+            }
             ((DMyViewHolder) holder).content.setText(dynamic.getContent());
-            ((DMyViewHolder) holder).time.setText("HHHHH");
-            ((DMyViewHolder) holder).praiseWidget.setDatas(users);
+            ((DMyViewHolder) holder).time.setText(dynamic.getCreatedAt());
+            if (dynamic.getLikeId() != null) {
+                ((DMyViewHolder) holder).tvLikeNum.setText(dynamic.getLikeId().size() + "");
+            }else{
+                ((DMyViewHolder) holder).tvLikeNum.setText(0+"");
+            }
+            if (commentList != null) {
+                Log.e("DAdapter", "评论" + commentList.toString());
+                ((DMyViewHolder) holder).commentLayout.setVisibility(View.VISIBLE);
+                addCommentWidget(commentList, (DMyViewHolder) holder, position);
+            }
+            if (users != null) {
+                ((DMyViewHolder) holder).praiseWidget.setDatas(users);
+            }
+            ArrayList<ImageInfo> imageInfoList = new ArrayList<>();
+            if (dynamic.getImageUrls() != null) {
+                for (String url : dynamic.getImageUrls()) {
+                    ImageInfo info = new ImageInfo();
+                    info.setThumbnailUrl(url);
+                    info.setBigImageUrl(url);
+                    imageInfoList.add(info);
+                }
+                Log.e("url",dynamic.getContent());
+            }
+            ((DMyViewHolder) holder).nineGridView.setAdapter(new NineGridViewClickAdapter(context, imageInfoList));
+
+            /**
+             * 初始化时，判断点赞标志
+             */
+            if (MyApp.isLogin()) {
+                if (dynamic.getLikeId() != null) {
+                    for (String id : dynamic.getLikeId()) {
+                        if (id.equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
+                            ((DMyViewHolder) holder).like.setLiked(true);
+                        } else {
+                            ((DMyViewHolder) holder).like.setLiked(false);
+                        }
+                    }
+                }
+            }
+
+            if (dynamic.getLikeId() == null) {
+                ((DMyViewHolder) holder).like.setLiked(false);
+            }
+        } else {
+
+            int type = (int) payloads.get(0);
+            switch (type) {
+                case REFRESH_PRAISE:
+                    ((DMyViewHolder) holder).tvLikeNum.setText(dynamic.getLikeId().size() + "");
+                    break;
+                case REFRESH_COMMENT:
+                    addCommentWidget(commentList, (DMyViewHolder) holder, position);
+                    break;
+            }
+        }
+
+        /**
+         * 评论事件
+         */
+        if (mOnCommentListener != null) {
             ((DMyViewHolder) holder).comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopup(dynamic);
-                    popupInputMethodWindow();
+                    mOnCommentListener.onClick(position);
                 }
             });
-        } else {
-
-            holder.itemView.setVisibility(View.VISIBLE);
-            holder.itemView.setPadding(0, 0, 0, 0);
-            if (dynamicList.size() < PAGE_ITEM_COUNT) {
-                holder.itemView.setVisibility(View.GONE);
-                holder.itemView.setPadding(0, -holder.itemView.getHeight(), 0, 0);
-            } else {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        holder.itemView.setVisibility(View.GONE);
-                        holder.itemView.setPadding(0, -holder.itemView.getHeight(), 0, 0);
-
-                    }
-                }, 1000);
-            }
-
-
         }
+        /**
+         * 点赞事件
+         */
+        if (mOnPraiseClikcListener != null) {
+            ((DMyViewHolder) holder).like.setOnLikeListener(new OnLikeListener() {
+                @Override
+                public void liked(LikeButton likeButton) {
+                    mOnPraiseClikcListener.onLikeClick(position);
+                }
 
+                @Override
+                public void unLiked(LikeButton likeButton) {
+                    mOnPraiseClikcListener.onUnLikeClick(position);
+                }
+            });
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return dynamicList.size() == 0 ? 0 : dynamicList.size() + 1;
+        return dynamicList.size();
 
 
     }
 
-    //    根据位置的不同，返回不同的View类型
-    @Override
-    public int getItemViewType(int position) {
-
-        if (position == getItemCount() - 1) {
-            return FOOTER_TYPE;
-        } else {
-            return NORMAL_TYPE;
-        }
-
-    }
 
     static class DMyViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.avatar)
@@ -167,6 +257,10 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         LikeButton like;
         @Bind(R.id.comment)
         LikeButton comment;
+        @Bind(R.id.tv_like_num)
+        TextView tvLikeNum;
+        @Bind(R.id.nineGridView)
+        NineGridView nineGridView;
 
         public DMyViewHolder(View itemView) {
             super(itemView);
@@ -174,20 +268,8 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    //    底部footerView的 viewholder
-    class FootViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.footer_bar)
-        ProgressBar footerBar;
-        @Bind(R.id.footer_text)
-        TextView footerText;
 
-        public FootViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
-
-    private void addCommentWidget(List<DComment> commentList, DMyViewHolder holder) {
+    private void addCommentWidget(final List<DComment> commentList, final DMyViewHolder holder, final int position) {
         if (commentList == null || commentList.size() == 0) {
             return;
         }
@@ -210,8 +292,7 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 params.bottomMargin = 1;
                 commentWidget.setLayoutParams(params);
                 commentWidget.setLineSpacing(4, 1);
-//                实现点击事件
-//                commentWidget.setOnClickListener(this);
+
 //                commentWidget.setOnLongClickListener(this);
                 holder.commentLayout.addView(commentWidget);
             }
@@ -223,8 +304,22 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 //        然后把数据绑定好，即可
         for (int n = 0; n < commentList.size(); n++) {
             CommentWidget commentWidget = (CommentWidget) holder.commentLayout.getChildAt(n);
+            final DComment dComment = commentList.get(n);
             if (commentWidget != null) {
                 commentWidget.setCommentText(commentList.get(n));
+                //                实现点击事件
+                commentWidget.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                        Message message = handler.obtainMessage();
+                        message.what = REPLY_COMMENT;
+                        message.obj = dComment;
+                        message.arg1 = position;
+                        handler.sendMessage(message);
+
+                    }
+                });
             }
 
         }
@@ -240,110 +335,28 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else {
 //            某项不空，则展示layout
             holder.commentAndPraiseLayout.setVisibility(View.VISIBLE);
+
             if (data.getCommentNum() == null || data.getLikeId() == null || data.getLikeId().size() == 0) {
                 holder.divider.setVisibility(View.GONE);
             } else {
                 holder.divider.setVisibility(View.VISIBLE);
+
             }
 
-//           点赞为空，取消点赞控件的可见性
-            if (data.getLikeId() == null || data.getLikeId().size() == 0) {
-                holder.praiseWidget.setVisibility(View.GONE);
-            } else {
-                holder.praiseWidget.setVisibility(View.VISIBLE);
-            }
+////           点赞为空，取消点赞控件的可见性
+//            if (data.getLikeId() == null || data.getLikeId().size() == 0) {
+//                holder.praiseWidget.setVisibility(View.GONE);
+//            } else {
+//                holder.praiseWidget.setVisibility(View.VISIBLE);
+//            }
 //           评论为空，取消评论控件的可见性
             if (data.getCommentNum() == null) {
-                holder.commentAndPraiseLayout.setVisibility(View.GONE);
+                holder.commentLayout.setVisibility(View.GONE);
             } else {
-                holder.commentAndPraiseLayout.setVisibility(View.VISIBLE);
+                holder.commentLayout.setVisibility(View.VISIBLE);
+
             }
         }
-    }
-
-
-    private void showPopup(final Dynamic dynamic) {
-
-        View parent = LayoutInflater.from(context).inflate(R.layout.activity_detail, null);
-        View view = LayoutInflater.from(context).inflate(R.layout.comment_view, null);
-
-        final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String content = etComment.getText().toString();
-                if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(context, "评论内容不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                DComment dcomment = new DComment();
-                dcomment.setContent(content);
-                dcomment.setAuthor(BmobUser.getCurrentUser(User.class));
-                dcomment.setDynamic(dynamic);
-                dcomment.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null) {
-//                    发送成功后，对话框直接消失
-                            popupWindow.dismiss();
-                        } else {
-                            Toast.makeText(context, "评论上传失败" + e.getMessage() + e.getErrorCode(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });
-
-//      弹出动画
-        //   popupWindow.setAnimationStyle();
-//      使其聚焦，要想监听菜单控件的时间就必须要调用此方法
-        popupWindow.setFocusable(true);
-//      设置允许在外点击消失
-        popupWindow.setOutsideTouchable(true);
-//      设置背景，这个是为了点击返回 back 也能使其消失，并且不会影响你的背景
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-//       软键盘不会挡着popupwindow
-        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//        设置菜单显示的位置
-        popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
-//        监听菜单的关闭事件
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-
-//                在popupwindow结束后，重新查询评论列表
-                //queryCommentList();
-            }
-        });
-//        监听触屏事件
-        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return false;
-            }
-        });
-
-
-    }
-
-
-    //    弹出软键盘的方法
-    private void popupInputMethodWindow() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-//                scrollView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        scrollView.scrollTo(0, 0);
-//                    }
-//                });
-            }
-        }, 0);
     }
 
 

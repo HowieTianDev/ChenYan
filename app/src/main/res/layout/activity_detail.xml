@@ -193,9 +193,9 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="3"
+            android:layout_weight="2.5"
             android:background="@drawable/input_bg"
             android:gravity="center_vertical"
             android:hint="写下你的观点..."
@@ -205,16 +205,16 @@
 
         <ImageView
             android:id="@+id/iv_collect"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="20dp"
             android:src="@drawable/ic_favorite_border_grey_500_24dp" />
 
         <ImageView
             android:id="@+id/iv_like"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="16dp"
             android:src="@drawable/ic_thumb_up_grey_500_24dp" />
     </LinearLayout>
 
