@@ -2,10 +2,12 @@ package com.howietian.chenyan.circle;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.constraint.solver.SolverVariable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -45,20 +47,18 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
-import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -88,52 +88,32 @@ public class CircleFragment extends BaseFragment {
 
     private static final String CIRCLE_FRAGMENT = "circle_fragment";
 
-    public interface replyCommentListener {
-        void onClick();
-    }
-
-    public void setReplyCommentListener(replyCommentListener listener, DComment dComment) {
-        this.dComment = dComment;
-        this.mReplyCommentListener = listener;
-    }
-
-    private DComment dComment = new DComment();
-    private replyCommentListener mReplyCommentListener;
     private List<Dynamic> dynamicList = new ArrayList<>();
     //    单个Item点赞ID集合，用于初始化界面布局
     private ArrayList<String> likeIdList = new ArrayList<>();
-    //   评论列表集合的集合
-    private List<List<DComment>> commentList = new ArrayList<>();
-    //   点赞用户集合的集合
-    private List<List<User>> praiseUserList = new ArrayList<>();
-    //    单个item点赞用户集合
-    private List<User> itemUserList = new ArrayList<>();
-    //    单个item评论的集合
-    private List<DComment> itemDCommentList = new ArrayList<>();
-    // 查询到的每个动态的ID集合
-    private String[] dynamicId = new String[Constant.LIMIT];
     //    查询到commentMap
     private Map<String, List<DComment>> commentMap = new HashMap<>();
-    private List<Map<String, List<Dynamic>>> commentMapList = new ArrayList<>();
     private DynamicAdapter dynamicAdapter;
     private RecyclerView.LayoutManager layoutManager;
-
     private int limit = Constant.LIMIT;
     private String lastTime;
+
     private static final int PULL_REFRESH = 0;
     private static final int LOAD_MORE = 1;
-    private static final int QUERY_PRAISE = 2;
-    private static final int QUERY_COMMENT = 3;
-    private static final int END_PRAISE = 4;
-    private static final int END_COMMENT = 5;
+    public static final String TYPE = "type";
+
 
     private Handler mhandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+
             if (msg.what == DynamicAdapter.REPLY_COMMENT) {
 
                 DComment comment = (DComment) msg.obj;
                 int position = msg.arg1;
+                if(comment.getAuthor().getObjectId().equals(BmobUser.getCurrentUser(User.class).getObjectId())){
+                    return;
+                }
                 showReplyPopup(comment.getDynamicId(), position, comment.getAuthor());
                 popupInputMethodWindow();
 
@@ -154,39 +134,6 @@ public class CircleFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    boolean isEndPraise = false;
-    boolean isEndComment = false;
-    int i = 0;
-    int j = 0;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                case QUERY_PRAISE:
-                    List<User> userList = (List<User>) msg.obj;
-                    praiseUserList.add(userList);
-
-                    Log.e(CIRCLE_FRAGMENT + "praise", "点赞集合" + praiseUserList.toString());
-
-
-                    if (msg.arg1 == END_PRAISE) {
-                        // dynamicAdapter.notifyDataSetChanged();
-
-                    }
-                    break;
-                case QUERY_COMMENT:
-                    List<DComment> mCommentList = (List<DComment>) msg.obj;
-                    commentList.add(mCommentList);
-                    if (msg.arg1 == END_COMMENT) {
-                        //  dynamicAdapter.notifyDataSetChanged();
-                        Log.e(CIRCLE_FRAGMENT + "comment", "hh" + commentList.toString());
-                        commentList.clear();
-                    }
-                    break;
-            }
-        }
-    };
 
     @Override
     public View createMyView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -196,32 +143,19 @@ public class CircleFragment extends BaseFragment {
     @Override
     public void init() {
         super.init();
-
         initDatas();
         initListener();
     }
 
 
     private void initDatas() {
-//       模拟一些数据
-//        DComment comment = new DComment("评论测试",BmobUser.getCurrentUser(User.class),null,null);
-//        List<DComment> mcommentList = new ArrayList<>();
-//        mcommentList.add(comment);
-//        commentList.add(mcommentList);
-//
-//        List<User> users = new ArrayList<>();
-//        users.add(BmobUser.getCurrentUser(User.class));
-//        praiseUserList.add(users);
 
-//      第一次进入后，初始化数据
         swipeRefreshLayout.autoRefresh();
-
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         bgaBanner.setData(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4);
 
-
-        dynamicAdapter = new DynamicAdapter(getContext(), dynamicList, commentMap, praiseUserList, mhandler);
+        dynamicAdapter = new DynamicAdapter(getContext(), dynamicList, commentMap, mhandler);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(dynamicAdapter);
@@ -264,7 +198,7 @@ public class CircleFragment extends BaseFragment {
     }
 
     private void loadMore() {
-        //        nestedScrollView 嵌套 recyclerView 导致recyclerview 监听不到，通过对recyclerview 的监听来实现fab的显示与隐藏
+
         swipeRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
@@ -290,8 +224,6 @@ public class CircleFragment extends BaseFragment {
                 }
             }
         });
-
-
     }
 
     /**
@@ -308,23 +240,10 @@ public class CircleFragment extends BaseFragment {
                 } else {
                     jumpTo(LoginActivity.class, true);
                 }
-
             }
         });
     }
 
-    /**
-     * 评论回复功能
-     */
-
-    private void commentReply() {
-        dynamicAdapter.setOnCommentReplyClickListener(new DynamicAdapter.onCommentReplyClickListener() {
-            @Override
-            public void onReplyClick() {
-                Log.e("HHHH", "我要回复了");
-            }
-        });
-    }
 
     /**
      * 点赞事件
@@ -334,57 +253,30 @@ public class CircleFragment extends BaseFragment {
         dynamicAdapter.setOnPraiseClickListener(new DynamicAdapter.onPraiseClickListener() {
             @Override
             public void onLikeClick(final int position) {
-
                 if (MyApp.isLogin()) {
                     final User currentUser = BmobUser.getCurrentUser(User.class);
                     final Dynamic dynamic = dynamicList.get(position);
                     if (likeIdList != null) {
                         likeIdList.clear();
                     }
-
-//                    BmobRelation relation = new BmobRelation();
-//                    relation.add(currentUser);
-//                    dynamic.setLike(relation);
-
                     if (dynamic.getLikeId() != null) {
                         likeIdList = dynamic.getLikeId();
                     }
                     likeIdList.add(currentUser.getObjectId());
-
                     dynamic.setLikeId(likeIdList);
                     dynamic.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                  dynamicAdapter.notifyItemChanged(position,DynamicAdapter.REFRESH_PRAISE);
-//                                BmobQuery<User> query = new BmobQuery<User>();
-//                                query.addWhereRelatedTo("like", new BmobPointer(dynamic));
-//                                query.findObjects(new FindListener<User>() {
-//                                    @Override
-//                                    public void done(List<User> list, BmobException e) {
-//                                        if (e == null) {
-//                                            praiseUserList.set(position, list);
-//                                            dynamicAdapter.notifyItemChanged(position, 0);
-//                                            /**
-//                                             * 做出数据源的改变，然后通知刷新界面
-//                                             */
-//                                            showToast("点赞成功");
-//                                        } else {
-//                                            showToast("查询点赞更新失败" + e.getMessage() + e.getErrorCode());
-//                                        }
-//                                    }
-//                                });
+                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                             } else {
                                 showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
                         }
                     });
-
                 } else {
                     jumpTo(LoginActivity.class, true);
                 }
-
-
             }
 
             @Override
@@ -395,12 +287,6 @@ public class CircleFragment extends BaseFragment {
                     if (likeIdList != null) {
                         likeIdList.clear();
                     }
-                    if (praiseUserList != null) {
-                        praiseUserList.clear();
-                    }
-//                    BmobRelation relation = new BmobRelation();
-//                    relation.remove(currentUser);
-//                    dynamic.setLike(relation);
 
                     if (dynamic.getLikeId() != null) {
                         likeIdList = dynamic.getLikeId();
@@ -412,30 +298,12 @@ public class CircleFragment extends BaseFragment {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                dynamicAdapter.notifyItemChanged(position,DynamicAdapter.REFRESH_PRAISE);
-//                                BmobQuery<User> query = new BmobQuery<User>();
-//                                query.addWhereRelatedTo("like", new BmobPointer(dynamic));
-//                                query.findObjects(new FindListener<User>() {
-//                                    @Override
-//                                    public void done(List<User> list, BmobException e) {
-//                                        if (e == null) {
-//                                            showToast("取消点赞成功");
-//                                            praiseUserList.set(position, null);
-//                                            dynamicAdapter.notifyItemChanged(position, 0);
-//                                            /**
-//                                             * 做出数据源的改变，然后通知刷新界面
-//                                             */
-//                                        } else {
-//                                            showToast("查询取消点赞更新失败" + e.getMessage() + e.getErrorCode());
-//                                        }
-//                                    }
-//                                });
+                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                             } else {
                                 showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
                         }
                     });
-
                 } else {
                     jumpTo(LoginActivity.class, true);
                 }
@@ -456,7 +324,6 @@ public class CircleFragment extends BaseFragment {
             jumpTo(LoginActivity.class, false);
         }
     }
-
 
     /**
      * 分页获取数据，分别为下拉刷新，上拉加载
@@ -640,12 +507,13 @@ public class CircleFragment extends BaseFragment {
 
     //    评论回复的弹出窗口
     private void showReplyPopup(final String dynamicId, final int position, final User replyUser) {
+//        不能回复自己发的评论
         View parent = LayoutInflater.from(getContext()).inflate(R.layout.frament_circle, null);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.comment_view, null);
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        etComment.setHint("回复"+replyUser.getNickName()+":");
+        etComment.setHint("回复" + replyUser.getNickName() + ":");
         Button btnSend = (Button) view.findViewById(R.id.btn_send);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -731,4 +599,56 @@ public class CircleFragment extends BaseFragment {
     }
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick({R.id.cv_complex, R.id.cv_sport, R.id.cv_feeling, R.id.cv_chinese, R.id.cv_match, R.id.cv_star, R.id.cv_art, R.id.cv_animation, R.id.cv_free})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.cv_complex:
+                toChooseType("综合");
+                break;
+            case R.id.cv_sport:
+                toChooseType("体育");
+                break;
+            case R.id.cv_feeling:
+                toChooseType("情感");
+                break;
+            case R.id.cv_chinese:
+                toChooseType("国学");
+                break;
+            case R.id.cv_match:
+                toChooseType("竞赛");
+                break;
+            case R.id.cv_star:
+                toChooseType("精华");
+                break;
+            case R.id.cv_art:
+                toChooseType("文艺");
+                break;
+            case R.id.cv_animation:
+                toChooseType("动漫");
+                break;
+            case R.id.cv_free:
+                toChooseType("闲情");
+                break;
+        }
+    }
+
+    private void toChooseType(String type){
+        Intent intent = new Intent(getContext(),ChooseCircleActivity.class);
+        intent.putExtra(TYPE,type);
+        jumpTo(intent,false);
+    }
 }

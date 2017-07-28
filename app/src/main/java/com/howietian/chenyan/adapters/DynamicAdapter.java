@@ -1,6 +1,7 @@
 package com.howietian.chenyan.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.DComment;
 import com.howietian.chenyan.entities.Dynamic;
 import com.howietian.chenyan.entities.User;
+import com.howietian.chenyan.entrance.LoginActivity;
 import com.howietian.chenyan.views.ClickShowMoreLayout;
 import com.howietian.chenyan.views.CommentWidget;
 import com.howietian.chenyan.views.PraiseWidget;
@@ -42,35 +44,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by 83624 on 2017/7/20.
  */
 
-public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewHolder> {
     private Context context;
 
     private List<Dynamic> dynamicList = new ArrayList<>();
 
     //   评论列表Map
     private Map<String, List<DComment>> commentMap = new HashMap<>();
-    //   点赞用户集合
-    private List<List<User>> praiseUserList = new ArrayList<>();
-
-    private List<DComment> comments = new ArrayList<>();
     private List<User> users = new ArrayList<>();
-
     private onCommentClickListener mOnCommentListener;
     private onPraiseClickListener mOnPraiseClikcListener;
-    private onCommentReplyClickListener mOnCommentReplyClickListener;
 
     public static final int REFRESH_PRAISE = 0;
     public static final int REFRESH_COMMENT = 1;
     public static final int REPLY_COMMENT = 2;
-    private static final String TAG = "dynamic adapter";
+
     private Handler handler;
 
 
-    public DynamicAdapter(Context context, List<Dynamic> list, Map<String, List<DComment>> commentMap, List<List<User>> userList, Handler handler) {
+    public DynamicAdapter(Context context, List<Dynamic> list, Map<String, List<DComment>> commentMap, Handler handler) {
         this.context = context;
         this.dynamicList = list;
         this.commentMap = commentMap;
-        this.praiseUserList = userList;
         this.handler = handler;
     }
 
@@ -82,15 +77,6 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setOnCommentListener(onCommentClickListener listener) {
         this.mOnCommentListener = listener;
-    }
-
-    //    点击评论回复的借口
-    public interface onCommentReplyClickListener {
-        void onReplyClick();
-    }
-
-    public void setOnCommentReplyClickListener(onCommentReplyClickListener listener) {
-        this.mOnCommentReplyClickListener = listener;
     }
 
     //  点赞的接口
@@ -105,53 +91,45 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+    public DMyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.dynamic_empty_content, parent, false);
         DMyViewHolder holder = new DMyViewHolder(view);
         return holder;
-
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(DMyViewHolder holder, int position) {
 //        不用这个方法
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position, List<Object> payloads) {
+    public void onBindViewHolder(DMyViewHolder holder, final int position, List<Object> payloads) {
         final Dynamic dynamic = dynamicList.get(position);
-
 
         List<DComment> commentList = commentMap.get(dynamic.getObjectId());
         if (commentList == null) {
-            ((DMyViewHolder) holder).commentAndPraiseLayout.setVisibility(View.GONE);
+            holder.commentAndPraiseLayout.setVisibility(View.GONE);
         } else {
-            ((DMyViewHolder) holder).commentAndPraiseLayout.setVisibility(View.VISIBLE);
+            holder.commentAndPraiseLayout.setVisibility(View.VISIBLE);
         }
-        Log.e("HHHH", "onBindViewHolder");
-
         if (payloads.isEmpty()) {
-
-
-            ((DMyViewHolder) holder).nick.setText(dynamic.getUser().getNickName());
+            holder.nick.setText(dynamic.getUser().getNickName());
             if (dynamic.getUser().getAvatar() != null) {
-                Glide.with(context).load(dynamic.getUser().getAvatar().getUrl()).into(((DMyViewHolder) holder).avatar);
+                Glide.with(context).load(dynamic.getUser().getAvatar().getUrl()).into(holder.avatar);
             }
-            ((DMyViewHolder) holder).content.setText(dynamic.getContent());
-            ((DMyViewHolder) holder).time.setText(dynamic.getCreatedAt());
+            holder.content.setText(dynamic.getContent());
+            holder.time.setText(dynamic.getCreatedAt());
             if (dynamic.getLikeId() != null) {
-                ((DMyViewHolder) holder).tvLikeNum.setText(dynamic.getLikeId().size() + "");
-            }else{
-                ((DMyViewHolder) holder).tvLikeNum.setText(0+"");
+                holder.tvLikeNum.setText(dynamic.getLikeId().size() + "");
+            } else {
+                holder.tvLikeNum.setText(0 + "");
             }
             if (commentList != null) {
-                Log.e("DAdapter", "评论" + commentList.toString());
-                ((DMyViewHolder) holder).commentLayout.setVisibility(View.VISIBLE);
-                addCommentWidget(commentList, (DMyViewHolder) holder, position);
+                holder.commentLayout.setVisibility(View.VISIBLE);
+                addCommentWidget(commentList, holder, position);
             }
             if (users != null) {
-                ((DMyViewHolder) holder).praiseWidget.setDatas(users);
+                holder.praiseWidget.setDatas(users);
             }
             ArrayList<ImageInfo> imageInfoList = new ArrayList<>();
             if (dynamic.getImageUrls() != null) {
@@ -161,10 +139,8 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     info.setBigImageUrl(url);
                     imageInfoList.add(info);
                 }
-                Log.e("url",dynamic.getContent());
             }
-            ((DMyViewHolder) holder).nineGridView.setAdapter(new NineGridViewClickAdapter(context, imageInfoList));
-
+            holder.nineGridView.setAdapter(new NineGridViewClickAdapter(context, imageInfoList));
             /**
              * 初始化时，判断点赞标志
              */
@@ -172,26 +148,25 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if (dynamic.getLikeId() != null) {
                     for (String id : dynamic.getLikeId()) {
                         if (id.equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
-                            ((DMyViewHolder) holder).like.setLiked(true);
+                            holder.like.setLiked(true);
                         } else {
-                            ((DMyViewHolder) holder).like.setLiked(false);
+                            holder.like.setLiked(false);
                         }
                     }
                 }
             }
 
             if (dynamic.getLikeId() == null) {
-                ((DMyViewHolder) holder).like.setLiked(false);
+                holder.like.setLiked(false);
             }
         } else {
-
             int type = (int) payloads.get(0);
             switch (type) {
                 case REFRESH_PRAISE:
-                    ((DMyViewHolder) holder).tvLikeNum.setText(dynamic.getLikeId().size() + "");
+                    holder.tvLikeNum.setText(dynamic.getLikeId().size() + "");
                     break;
                 case REFRESH_COMMENT:
-                    addCommentWidget(commentList, (DMyViewHolder) holder, position);
+                    addCommentWidget(commentList, holder, position);
                     break;
             }
         }
@@ -200,7 +175,7 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
          * 评论事件
          */
         if (mOnCommentListener != null) {
-            ((DMyViewHolder) holder).comment.setOnClickListener(new View.OnClickListener() {
+            holder.comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mOnCommentListener.onClick(position);
@@ -211,7 +186,7 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
          * 点赞事件
          */
         if (mOnPraiseClikcListener != null) {
-            ((DMyViewHolder) holder).like.setOnLikeListener(new OnLikeListener() {
+            holder.like.setOnLikeListener(new OnLikeListener() {
                 @Override
                 public void liked(LikeButton likeButton) {
                     mOnPraiseClikcListener.onLikeClick(position);
@@ -229,8 +204,6 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return dynamicList.size();
-
-
     }
 
 
@@ -267,7 +240,6 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ButterKnife.bind(this, itemView);
         }
     }
-
 
     private void addCommentWidget(final List<DComment> commentList, final DMyViewHolder holder, final int position) {
         if (commentList == null || commentList.size() == 0) {
@@ -311,17 +283,20 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 commentWidget.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
-                        Message message = handler.obtainMessage();
-                        message.what = REPLY_COMMENT;
-                        message.obj = dComment;
-                        message.arg1 = position;
-                        handler.sendMessage(message);
+                        if (MyApp.isLogin()) {
+                            Message message = handler.obtainMessage();
+                            message.what = REPLY_COMMENT;
+                            message.obj = dComment;
+                            message.arg1 = position;
+                            handler.sendMessage(message);
+                        } else {
+                            Intent intent = new Intent(context, LoginActivity.class);
+                            context.startActivity(intent);
+                        }
 
                     }
                 });
             }
-
         }
     }
 
@@ -340,9 +315,7 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 holder.divider.setVisibility(View.GONE);
             } else {
                 holder.divider.setVisibility(View.VISIBLE);
-
             }
-
 ////           点赞为空，取消点赞控件的可见性
 //            if (data.getLikeId() == null || data.getLikeId().size() == 0) {
 //                holder.praiseWidget.setVisibility(View.GONE);

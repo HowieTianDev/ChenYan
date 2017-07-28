@@ -86,6 +86,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_complex"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -106,6 +107,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_sport"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -126,6 +128,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_feeling"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -146,6 +149,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_chinese"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -167,6 +171,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_match"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -193,6 +198,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_star"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -214,6 +220,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_art"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -234,6 +241,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_animation"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -243,7 +251,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="竞赛"
+                                android:text="动漫"
                                 android:textColor="@color/white" />
                         </FrameLayout>
 
@@ -254,6 +262,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_free"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"

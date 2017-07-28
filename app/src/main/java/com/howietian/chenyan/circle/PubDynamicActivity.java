@@ -24,22 +24,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.howietian.chenyan.BaseActivity;
-import com.howietian.chenyan.Main2Activity;
 import com.howietian.chenyan.R;
-import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.Dynamic;
 import com.howietian.chenyan.entities.User;
-import com.howietian.chenyan.entrance.LoginActivity;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
-import com.melnykov.fab.FloatingActionButton;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +44,6 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
-import cn.bmob.v3.listener.UploadFileListener;
 
 public class PubDynamicActivity extends BaseActivity {
     private static final int REQUEST_TAKE_PHOTO_PERMISSION = 0;

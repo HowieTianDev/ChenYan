@@ -21,11 +21,11 @@ public class TypeActivity extends BaseActivity {
     ListView listType;
 
     public static final String TYPE = "type";
-    private String[] types = new String[]{"综合","体育","情感","国学","竞赛","精华","文艺","动漫","闲情","动漫"};
+    private String[] types = new String[]{"综合", "体育", "情感", "国学", "竞赛", "文艺", "动漫", "闲情", "动漫"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -36,18 +36,15 @@ public class TypeActivity extends BaseActivity {
     @Override
     public void init() {
         super.init();
-        listType.setAdapter(new ArrayAdapter<>(this,R.layout.item_list,R.id.tv_item,types));
+        listType.setAdapter(new ArrayAdapter<>(this, R.layout.item_list, R.id.tv_item, types));
         listType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.putExtra(TYPE,types[i]);
-                setResult(RESULT_OK,intent);
+                intent.putExtra(TYPE, types[i]);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
     }
-
-
-
 }
