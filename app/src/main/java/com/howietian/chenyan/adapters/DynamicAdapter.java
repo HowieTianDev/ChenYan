@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.howietian.chenyan.R;
@@ -34,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.bmob.v3.BmobUser;
@@ -54,6 +51,7 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
     private List<User> users = new ArrayList<>();
     private onCommentClickListener mOnCommentListener;
     private onPraiseClickListener mOnPraiseClikcListener;
+    private onAvatarClickListener mOnAvatarClickListener;
 
     public static final int REFRESH_PRAISE = 0;
     public static final int REFRESH_COMMENT = 1;
@@ -90,6 +88,15 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
         this.mOnPraiseClikcListener = listener;
     }
 
+    //    点击头像的接口
+    public interface onAvatarClickListener {
+        void onClick(int position);
+    }
+
+    public void setOnAvatarClickListener(onAvatarClickListener listener) {
+        this.mOnAvatarClickListener = listener;
+    }
+
     @Override
     public DMyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.dynamic_empty_content, parent, false);
@@ -116,6 +123,8 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
             holder.nick.setText(dynamic.getUser().getNickName());
             if (dynamic.getUser().getAvatar() != null) {
                 Glide.with(context).load(dynamic.getUser().getAvatar().getUrl()).into(holder.avatar);
+            } else {
+                holder.avatar.setImageResource(R.drawable.ic_account_circle_blue_grey_100_36dp);
             }
             holder.content.setText(dynamic.getContent());
             holder.time.setText(dynamic.getCreatedAt());
@@ -195,6 +204,14 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
                 @Override
                 public void unLiked(LikeButton likeButton) {
                     mOnPraiseClikcListener.onUnLikeClick(position);
+                }
+            });
+        }
+        if (mOnAvatarClickListener != null) {
+            holder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnAvatarClickListener.onClick(position);
                 }
             });
         }

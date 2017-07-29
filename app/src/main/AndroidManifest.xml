@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".entrance.SplashActivity"></activity>
+        <activity android:name=".entrance.SplashActivity" />
         <activity android:name=".entrance.LoginActivity" />
         <activity android:name=".entrance.RegisterActivity" />
         <activity android:name=".entrance.ForgetPwdActivity" />
@@ -47,10 +47,11 @@
         <activity
             android:name=".home.SearchActivity"
             android:theme="@style/SearchTheme" />
-        <activity android:name=".Main2Activity"></activity>
-        <activity android:name=".circle.PubDynamicActivity"></activity>
+        <activity android:name=".Main2Activity" />
+        <activity android:name=".circle.PubDynamicActivity" />
         <activity android:name=".circle.TypeActivity" />
-        <activity android:name=".circle.ChooseCircleActivity"></activity>
+        <activity android:name=".circle.ChooseCircleActivity" />
+        <activity android:name=".personpage.PersonPageActivity"></activity>
     </application>
 
 </manifest>

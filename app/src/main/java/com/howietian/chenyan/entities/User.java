@@ -21,6 +21,10 @@ public class User extends BmobUser {
     private String like;
     private String birthday;
 
+    private Integer dynamicNum;
+    private Integer followNum;
+    private Integer fanNum;
+
 
     public User() {
     }
@@ -109,6 +113,30 @@ public class User extends BmobUser {
         this.birthday = birthday;
     }
 
+    public Integer getDynamicNum() {
+        return dynamicNum;
+    }
+
+    public void setDynamicNum(Integer dynamicNum) {
+        this.dynamicNum = dynamicNum;
+    }
+
+    public Integer getFollowNum() {
+        return followNum;
+    }
+
+    public void setFollowNum(Integer followNum) {
+        this.followNum = followNum;
+    }
+
+    public Integer getFanNum() {
+        return fanNum;
+    }
+
+    public void setFanNum(Integer fanNum) {
+        this.fanNum = fanNum;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -121,6 +149,9 @@ public class User extends BmobUser {
                 ", position='" + position + '\'' +
                 ", like='" + like + '\'' +
                 ", birthday='" + birthday + '\'' +
+                ", dynamicNum=" + dynamicNum +
+                ", followNum=" + followNum +
+                ", fanNum=" + fanNum +
                 '}';
     }
 }

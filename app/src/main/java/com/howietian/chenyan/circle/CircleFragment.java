@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.google.gson.Gson;
 import com.howietian.chenyan.BaseFragment;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.adapters.DynamicAdapter;
@@ -38,6 +39,7 @@ import com.howietian.chenyan.entities.DComment;
 import com.howietian.chenyan.entities.Dynamic;
 import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.entrance.LoginActivity;
+import com.howietian.chenyan.personpage.PersonPageActivity;
 import com.melnykov.fab.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -111,7 +113,7 @@ public class CircleFragment extends BaseFragment {
 
                 DComment comment = (DComment) msg.obj;
                 int position = msg.arg1;
-                if(comment.getAuthor().getObjectId().equals(BmobUser.getCurrentUser(User.class).getObjectId())){
+                if (comment.getAuthor().getObjectId().equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
                     return;
                 }
                 showReplyPopup(comment.getDynamicId(), position, comment.getAuthor());
@@ -186,6 +188,7 @@ public class CircleFragment extends BaseFragment {
         refresh();
         comment();
         praise();
+        toPersonPage();
     }
 
     private void refresh() {
@@ -308,6 +311,23 @@ public class CircleFragment extends BaseFragment {
                     jumpTo(LoginActivity.class, true);
                 }
 
+            }
+        });
+    }
+
+    /**
+     * 点击用户头像跳转个人主页
+     */
+    private void toPersonPage() {
+        dynamicAdapter.setOnAvatarClickListener(new DynamicAdapter.onAvatarClickListener() {
+            @Override
+            public void onClick(int position) {
+                Dynamic dynamic = dynamicList.get(position);
+                User dynamicAuthor = dynamic.getUser();
+                String userMsg = new Gson().toJson(dynamicAuthor, User.class);
+                Intent intent = new Intent(getContext(), PersonPageActivity.class);
+                intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
+                jumpTo(intent,false);
             }
         });
     }
@@ -600,14 +620,6 @@ public class CircleFragment extends BaseFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
@@ -646,9 +658,9 @@ public class CircleFragment extends BaseFragment {
         }
     }
 
-    private void toChooseType(String type){
-        Intent intent = new Intent(getContext(),ChooseCircleActivity.class);
-        intent.putExtra(TYPE,type);
-        jumpTo(intent,false);
+    private void toChooseType(String type) {
+        Intent intent = new Intent(getContext(), ChooseCircleActivity.class);
+        intent.putExtra(TYPE, type);
+        jumpTo(intent, false);
     }
 }

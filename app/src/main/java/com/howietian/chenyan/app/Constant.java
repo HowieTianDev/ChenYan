@@ -10,4 +10,5 @@ public class Constant {
     public static final String FROM_ARTICLE = "from_article";
     public static final String FROM_ACTIVIRY = "from_activity";
     public static final String TAG = "TEST";
+    public static final String TO_PERSON_PAGE = "to_person_page";
 }
