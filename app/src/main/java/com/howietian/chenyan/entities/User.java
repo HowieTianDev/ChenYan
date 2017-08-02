@@ -1,10 +1,13 @@
 package com.howietian.chenyan.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * Created by 83624 on 2017/6/30.
@@ -21,15 +24,17 @@ public class User extends BmobUser {
     private String like;
     private String birthday;
 
-    private Integer dynamicNum;
-    private Integer followNum;
-    private Integer fanNum;
+    private Integer dynamicNum = 0;
+    private Integer fanNum = 0;
+    private BmobRelation focus;
+    private ArrayList<String> focusIds;
+
 
 
     public User() {
     }
 
-    public User(String nickName, String realName, BmobFile avatar, Boolean gender, String intro, String school, String position, String like, String birthday) {
+    public User(String nickName, String realName, BmobFile avatar, Boolean gender, String intro, String school, String position, String like, String birthday, Integer dynamicNum, Integer fanNum, BmobRelation focus, ArrayList<String> focusIds) {
         this.nickName = nickName;
         this.realName = realName;
         this.avatar = avatar;
@@ -39,6 +44,10 @@ public class User extends BmobUser {
         this.position = position;
         this.like = like;
         this.birthday = birthday;
+        this.dynamicNum = dynamicNum;
+        this.fanNum = fanNum;
+        this.focus = focus;
+        this.focusIds = focusIds;
     }
 
     public String getNickName() {
@@ -121,20 +130,28 @@ public class User extends BmobUser {
         this.dynamicNum = dynamicNum;
     }
 
-    public Integer getFollowNum() {
-        return followNum;
-    }
-
-    public void setFollowNum(Integer followNum) {
-        this.followNum = followNum;
-    }
-
     public Integer getFanNum() {
         return fanNum;
     }
 
     public void setFanNum(Integer fanNum) {
         this.fanNum = fanNum;
+    }
+
+    public BmobRelation getFocus() {
+        return focus;
+    }
+
+    public void setFocus(BmobRelation focus) {
+        this.focus = focus;
+    }
+
+    public ArrayList<String> getFocusIds() {
+        return focusIds;
+    }
+
+    public void setFocusIds(ArrayList<String> focusIds) {
+        this.focusIds = focusIds;
     }
 
     @Override
@@ -150,8 +167,9 @@ public class User extends BmobUser {
                 ", like='" + like + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", dynamicNum=" + dynamicNum +
-                ", followNum=" + followNum +
                 ", fanNum=" + fanNum +
+                ", focus=" + focus +
+                ", focusIds=" + focusIds +
                 '}';
     }
 }

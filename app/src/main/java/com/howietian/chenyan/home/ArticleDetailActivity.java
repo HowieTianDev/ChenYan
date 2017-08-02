@@ -294,14 +294,9 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     public void setLike() {
         if (MyApp.isLogin()) {
             if (!isLike) {
-
-
                 toLike();
-
             } else {
-
                 cancelLike();
-
             }
         } else {
             jumpTo(LoginActivity.class, false);
@@ -367,7 +362,6 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     //设置点赞的方法
-
     private void toLike() {
         BmobRelation relation = new BmobRelation();
 //      将当前用户添加到MActivity表中的like字段值中，表名当前用户喜欢这个帖子
@@ -417,7 +411,6 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
                     tvLikeNum.setText("赞（"+likeIdList.size()+"）");
                     ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
                     isLike = false;
-
                 } else {
                     showToast("取消点赞失败！" + e.getMessage() + e.getErrorCode());
                 }

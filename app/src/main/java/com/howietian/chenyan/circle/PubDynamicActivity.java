@@ -43,6 +43,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 
 public class PubDynamicActivity extends BaseActivity {
@@ -158,6 +159,7 @@ public class PubDynamicActivity extends BaseActivity {
                             public void done(String s, BmobException e) {
                                 if (e == null) {
                                     showToast("发布成功");
+                                    updateUserDynamicNum();
                                     progress.dismiss();
                                 } else {
                                     showToast("发布失败" + e.getMessage() + e.getErrorCode());
@@ -186,6 +188,7 @@ public class PubDynamicActivity extends BaseActivity {
                 public void done(String s, BmobException e) {
                     if (e == null) {
                         showToast("发布成功");
+                        updateUserDynamicNum();
                     } else {
                         showToast("发布失败" + e.getMessage() + e.getErrorCode());
                     }
@@ -194,6 +197,22 @@ public class PubDynamicActivity extends BaseActivity {
         }
 
 
+    }
+
+    private void updateUserDynamicNum() {
+        int num = user.getDynamicNum();
+        num++;
+        user.setDynamicNum(num);
+        user.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    showToast("OK");
+                } else {
+                    showToast("动态数目更新失败");
+                }
+            }
+        });
     }
 
     public String getFilePathFromContentUri(Uri selectedVideoUri) {

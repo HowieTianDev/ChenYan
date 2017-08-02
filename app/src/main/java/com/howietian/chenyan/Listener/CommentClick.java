@@ -1,13 +1,20 @@
 package com.howietian.chenyan.Listener;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.text.TextPaint;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.howietian.chenyan.app.Constant;
+import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.User;
+import com.howietian.chenyan.entrance.LoginActivity;
+import com.howietian.chenyan.personpage.PersonPageActivity;
 import com.howietian.chenyan.utils.UIHelper;
 
 public class CommentClick extends ClickableSpanEx {
@@ -27,9 +34,17 @@ public class CommentClick extends ClickableSpanEx {
 
     @Override
     public void onClick(View widget) {
-        if (mUserInfo != null)
-            Toast.makeText(mContext, "当前用户名是： " + mUserInfo.getNickName() + "   它的ID是： " + mUserInfo.getObjectId(),
-                    Toast.LENGTH_SHORT).show();
+        if(MyApp.isLogin()){
+            if (mUserInfo != null) {
+                Intent intent = new Intent(mContext, PersonPageActivity.class);
+                intent.putExtra(Constant.TO_PERSON_PAGE,new Gson().toJson(mUserInfo,User.class));
+                mContext.startActivity(intent);
+            }
+        }else{
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            mContext.startActivity(intent);
+        }
+
     }
 
     @Override

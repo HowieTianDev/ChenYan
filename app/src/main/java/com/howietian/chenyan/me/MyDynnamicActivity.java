@@ -1,23 +1,20 @@
-package com.howietian.chenyan.personpage;
-
+package com.howietian.chenyan.me;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -25,11 +22,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import com.google.gson.Gson;
-import com.howietian.chenyan.BaseFragment;
+import com.howietian.chenyan.BaseActivity;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.adapters.DynamicAdapter;
-import com.howietian.chenyan.app.Constant;
 import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.DComment;
 import com.howietian.chenyan.entities.Dynamic;
@@ -42,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -50,17 +44,17 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class PersonDynamicFragment extends BaseFragment {
-    public static String TAG = "person_dynamic_fragment";
-    @Bind(R.id.rv_dynamic)
+public class MyDynnamicActivity extends BaseActivity {
+
+    @Bind(R.id.tb_my_dynamic)
+    Toolbar tbMyDynamic;
+    @Bind(R.id.rv_my_dynamic)
     RecyclerView recyclerView;
-    @Bind(R.id.swipeLayout)
+    @Bind(R.id.swipeLayout_my_dynamic)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    private User currentUser;
+
+    private User currentUser = BmobUser.getCurrentUser(User.class);
     private List<Dynamic> dynamicList = new ArrayList<>();
     //    单个Item点赞ID集合，用于初始化界面布局
     private ArrayList<String> likeIdList = new ArrayList<>();
@@ -87,50 +81,49 @@ public class PersonDynamicFragment extends BaseFragment {
         }
     };
 
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
-    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    public PersonDynamicFragment() {
-        // Required empty public constructor
-    }
-
-    public static PersonDynamicFragment newInstance(String args) {
-        PersonDynamicFragment fragment = new PersonDynamicFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(TAG, args);
-        fragment.setArguments(bundle);
-        return fragment;
     }
 
     @Override
-    public View createMyView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_person_dynamic, container, false);
+    public void setMyContentView() {
+        setContentView(R.layout.activity_my_dynnamic);
     }
-
 
     @Override
     public void init() {
         super.init();
+        initViews();
         initDatas();
         initListeners();
+    }
+
+    private void initViews() {
+        setSupportActionBar(tbMyDynamic);
     }
 
     private void initDatas() {
         swipeRefreshLayout.setRefreshing(true);
         queryPersonDynamic();
-        dynamicAdapter = new DynamicAdapter(getContext(), dynamicList, commentMap, mhandler);
-        layoutManager = new LinearLayoutManager(getContext());
+        dynamicAdapter = new DynamicAdapter(this, dynamicList, commentMap, mhandler);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(dynamicAdapter);
         recyclerView.setHasFixedSize(true);
     }
 
     private void initListeners() {
+        tbMyDynamic.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         refresh();
         comment();
         praise();
-        toPersonPage();
     }
 
     private void refresh() {
@@ -223,28 +216,6 @@ public class PersonDynamicFragment extends BaseFragment {
         });
     }
 
-    /**
-     * 点击用户头像跳转个人主页
-     */
-    private void toPersonPage() {
-        dynamicAdapter.setOnAvatarClickListener(new DynamicAdapter.onAvatarClickListener() {
-            @Override
-            public void onClick(int position) {
-                if (MyApp.isLogin()) {
-                    Dynamic dynamic = dynamicList.get(position);
-                    User dynamicAuthor = dynamic.getUser();
-                    String userMsg = new Gson().toJson(dynamicAuthor, User.class);
-                    Intent intent = new Intent(getContext(), PersonPageActivity.class);
-                    intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
-                    jumpTo(intent, false);
-                } else {
-                    jumpTo(LoginActivity.class, true);
-                }
-
-            }
-        });
-    }
-
     private void queryPersonDynamic() {
         BmobQuery<Dynamic> query = new BmobQuery<>();
         query.include("user");
@@ -255,7 +226,7 @@ public class PersonDynamicFragment extends BaseFragment {
             public void done(List<Dynamic> list, BmobException e) {
                 if (e == null) {
                     if (list.size() > 0) {
-                        if(dynamicList!=null){
+                        if (dynamicList != null) {
                             dynamicList.clear();
                         }
                         List<String> dynamicIds = new ArrayList<String>();
@@ -309,8 +280,8 @@ public class PersonDynamicFragment extends BaseFragment {
     // 原创评论的弹出窗口
     private void showPopup(final Dynamic dynamic, final int position) {
 
-        View parent = LayoutInflater.from(getContext()).inflate(R.layout.frament_circle, null);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.comment_view, null);
+        View parent = LayoutInflater.from(this).inflate(R.layout.frament_circle, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.comment_view, null);
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
@@ -389,8 +360,8 @@ public class PersonDynamicFragment extends BaseFragment {
     //    评论回复的弹出窗口
     private void showReplyPopup(final String dynamicId, final int position, final User replyUser) {
 //        不能回复自己发的评论
-        View parent = LayoutInflater.from(getContext()).inflate(R.layout.frament_circle, null);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.comment_view, null);
+        View parent = LayoutInflater.from(this).inflate(R.layout.frament_circle, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.comment_view, null);
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
@@ -473,7 +444,7 @@ public class PersonDynamicFragment extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }, 0);

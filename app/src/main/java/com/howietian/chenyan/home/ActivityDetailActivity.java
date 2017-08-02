@@ -348,20 +348,25 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
     @OnClick(R.id.btn_join)
     public void tojoin() {
-        User user = BmobUser.getCurrentUser(User.class);
-        String school = user.getSchool();
-        String phone = user.getMobilePhoneNumber();
-        String realName = user.getRealName();
-        if (isPoster()) {
+        if(MyApp.isLogin()){
+            User user = BmobUser.getCurrentUser(User.class);
+            String school = user.getSchool();
+            String phone = user.getMobilePhoneNumber();
+            String realName = user.getRealName();
+            if (isPoster()) {
 //           去报名详情界面
-            toJoinedDetail();
-        } else {
-            if (!TextUtils.isEmpty(school) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(realName)) {
-                showJoinDialog();
+                toJoinedDetail();
             } else {
-                showToast("请先完善个人信息");
+                if (!TextUtils.isEmpty(school) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(realName)) {
+                    showJoinDialog();
+                } else {
+                    showToast("请先完善个人信息");
+                }
             }
+        }else{
+            jumpTo(LoginActivity.class,true);
         }
+
     }
 
     private void toJoinedDetail() {

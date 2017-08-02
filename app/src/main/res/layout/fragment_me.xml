@@ -41,11 +41,12 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/ll_publish"
+            style="@style/rippleStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            style="@style/rippleStyle"
             android:orientation="vertical">
 
             <TextView
@@ -61,16 +62,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="发布"
+                android:text="动态"
                 android:textSize="@dimen/bodySmall" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_follow"
+            style="@style/rippleStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            style="@style/rippleStyle"
             android:orientation="vertical">
 
             <TextView
@@ -91,11 +93,12 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_fan"
+            style="@style/rippleStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            style="@style/rippleStyle"
             android:orientation="vertical">
 
             <TextView
@@ -122,10 +125,10 @@
         android:background="@color/divider" />
 
     <LinearLayout
+        style="@style/rippleStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="6"
-        style="@style/rippleStyle"
         android:orientation="vertical">
 
         <LinearLayout
@@ -141,10 +144,12 @@
                 android:drawableLeft="@drawable/ic_person_black_24dp"
                 android:text="我的资料" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -158,10 +163,12 @@
                 android:drawableLeft="@drawable/ic_dashboard_black_24dp"
                 android:text="报名活动" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -175,10 +182,12 @@
                 android:drawableLeft="@drawable/ic_widgets_black_24dp"
                 android:text="发起活动" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -191,10 +200,12 @@
                 android:drawableLeft="@drawable/ic_notifications_black_24dp"
                 android:text="我的通知" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -207,10 +218,12 @@
                 android:drawableLeft="@drawable/ic_toys_black_24dp"
                 android:text="我的社团" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -224,16 +237,17 @@
                 android:drawableLeft="@drawable/ic_favorite_black_24dp"
                 android:text="我的收藏" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
+
         <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/tv_logout"
@@ -243,10 +257,11 @@
                 android:drawableLeft="@drawable/ic_power_settings_new_black_24dp"
                 android:text="退出登录" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
 
     </LinearLayout>
 

@@ -322,12 +322,17 @@ public class CircleFragment extends BaseFragment {
         dynamicAdapter.setOnAvatarClickListener(new DynamicAdapter.onAvatarClickListener() {
             @Override
             public void onClick(int position) {
-                Dynamic dynamic = dynamicList.get(position);
-                User dynamicAuthor = dynamic.getUser();
-                String userMsg = new Gson().toJson(dynamicAuthor, User.class);
-                Intent intent = new Intent(getContext(), PersonPageActivity.class);
-                intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
-                jumpTo(intent,false);
+                if(MyApp.isLogin()){
+                    Dynamic dynamic = dynamicList.get(position);
+                    User dynamicAuthor = dynamic.getUser();
+                    String userMsg = new Gson().toJson(dynamicAuthor, User.class);
+                    Intent intent = new Intent(getContext(), PersonPageActivity.class);
+                    intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
+                    jumpTo(intent,false);
+                }else{
+                    jumpTo(LoginActivity.class,true);
+                }
+
             }
         });
     }

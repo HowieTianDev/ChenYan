@@ -116,7 +116,13 @@ public class MyJoinActivity extends BaseActivity {
      */
 
     private void refresh(){
-        queryMyJoinedActivity();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                queryMyJoinedActivity();
+            }
+        });
+
     }
 
     private void setOnItemClickListener(){

@@ -21,7 +21,7 @@ public class TypeActivity extends BaseActivity {
     ListView listType;
 
     public static final String TYPE = "type";
-    private String[] types = new String[]{"综合", "体育", "情感", "国学", "竞赛", "文艺", "动漫", "闲情", "动漫"};
+    private String[] types = new String[]{"综合", "体育", "情感", "国学", "竞赛", "文艺", "动漫", "闲情"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

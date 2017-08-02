@@ -51,7 +51,10 @@
         <activity android:name=".circle.PubDynamicActivity" />
         <activity android:name=".circle.TypeActivity" />
         <activity android:name=".circle.ChooseCircleActivity" />
-        <activity android:name=".personpage.PersonPageActivity"></activity>
+        <activity android:name=".personpage.PersonPageActivity" />
+        <activity android:name=".me.MyDynnamicActivity" />
+        <activity android:name=".me.MyFocusActivity" />
+        <activity android:name=".me.MyFanActivity"></activity>
     </application>
 
 </manifest>
