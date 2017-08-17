@@ -133,12 +133,14 @@ public class FocusFragment extends BaseFragment {
     @Override
     public void init() {
         super.init();
-        initDatas();
-        initListener();
+
+            initDatas();
+            initListener();
+
+
     }
 
     private void initDatas() {
-
         swipeRefreshLayout.autoRefresh();
 
         dynamicAdapter = new DynamicAdapter(getContext(), dynamicList, commentMap, mhandler);
@@ -164,7 +166,19 @@ public class FocusFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                getData(PULL_REFRESH);
+                if(MyApp.isLogin()){
+                    getData(PULL_REFRESH);
+                }else{
+                    showToast("请先登录哦~");
+                    mhandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            swipeRefreshLayout.finishRefresh();
+                        }
+                    },1000);
+
+                }
+
             }
         });
     }
@@ -190,7 +204,7 @@ public class FocusFragment extends BaseFragment {
                     showPopup(dynamicList.get(position), position);
                     popupInputMethodWindow();
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
             }
         });
@@ -226,7 +240,7 @@ public class FocusFragment extends BaseFragment {
                         }
                     });
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
             }
 
@@ -256,7 +270,7 @@ public class FocusFragment extends BaseFragment {
                         }
                     });
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
 
             }
@@ -278,7 +292,7 @@ public class FocusFragment extends BaseFragment {
                     intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
                     jumpTo(intent, false);
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
 
             }

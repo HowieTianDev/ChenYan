@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.howietian.chenyan.entities.DComment;
+import com.howietian.chenyan.entities.Rank;
 import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.views.ClickShowMoreLayout;
 import com.howietian.chenyan.views.CommentWidget;
@@ -28,6 +29,7 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.filter.Filter;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 public class Main2Activity extends BaseActivity {
     private static final int REQUEST_CODE_CHOOSE = 0;
@@ -92,17 +97,18 @@ public class Main2Activity extends BaseActivity {
 //            users.add(user);
 //        }
 //        praiseWidget.setDatas(users);
-        DComment comment1 = new DComment("7777777",BmobUser.getCurrentUser(User.class),BmobUser.getCurrentUser(User.class),null,null);
-        commentWidget.setCommentText(comment1);
-       // nineTest();
-        Matisse.from(Main2Activity.this)
-                .choose(MimeType.allOf())
-                .countable(true)
-                .maxSelectable(9)
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                .thumbnailScale(0.85f)
-                .imageEngine(new GlideEngine())
-                .forResult(REQUEST_CODE_CHOOSE);
+//        DComment comment1 = new DComment("7777777",BmobUser.getCurrentUser(User.class),BmobUser.getCurrentUser(User.class),null,null);
+//        commentWidget.setCommentText(comment1);
+//       // nineTest();
+//        Matisse.from(Main2Activity.this)
+//                .choose(MimeType.allOf())
+//                .countable(true)
+//                .maxSelectable(9)
+//                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+//                .thumbnailScale(0.85f)
+//                .imageEngine(new GlideEngine())
+//                .forResult(REQUEST_CODE_CHOOSE);
+        createRank();
     }
 
     private void spanTest() {
@@ -155,6 +161,38 @@ public class Main2Activity extends BaseActivity {
             mSelected = Matisse.obtainResult(data);
             Log.e("Matisse", "mSelected: " + mSelected);
         }
+    }
+
+    private void createRank(){
+        Rank rank = new Rank();
+        User user = BmobUser.getCurrentUser(User.class);
+        rank.setTitle("测试");
+        Uri uri = Uri.parse("content://media/external/images/media/246751");
+//        File file = new File("content://media/external/images/media/246751");
+//       // File file1 = new File("")
+//        BmobFile bfile = new BmobFile(file);
+//        rank.setImage(bfile);
+        rank.setNo1(user);
+        rank.setNo2(user);
+        rank.setNo3(user);
+        rank.setNo4(user);
+        rank.setNo5(user);
+        rank.setNo6(user);
+        rank.setNo7(user);
+        rank.setNo8(user);
+        rank.setNo9(user);
+        rank.setNo10(user);
+
+        rank.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if(e == null){
+                    showToast("保存成功");
+                }else{
+                    showToast("保存失败"+e.getMessage()+e.getErrorCode());
+                }
+            }
+        });
     }
 
 

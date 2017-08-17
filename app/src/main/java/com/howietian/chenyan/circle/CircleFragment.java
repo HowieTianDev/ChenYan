@@ -241,7 +241,7 @@ public class CircleFragment extends BaseFragment {
                     showPopup(dynamicList.get(position), position);
                     popupInputMethodWindow();
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
             }
         });
@@ -278,7 +278,7 @@ public class CircleFragment extends BaseFragment {
                         }
                     });
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
             }
 
@@ -308,7 +308,7 @@ public class CircleFragment extends BaseFragment {
                         }
                     });
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
 
             }
@@ -330,7 +330,7 @@ public class CircleFragment extends BaseFragment {
                     intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
                     jumpTo(intent,false);
                 }else{
-                    jumpTo(LoginActivity.class,true);
+                    jumpTo(LoginActivity.class,false);
                 }
 
             }

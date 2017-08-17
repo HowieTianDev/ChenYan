@@ -45,6 +45,10 @@ public class MeFragment extends BaseFragment {
     TextView tvPublish;
     @Bind(R.id.tv_pub_activity)
     TextView tvPubActivity;
+    @Bind(R.id.tv_my_notify)
+    TextView tvMyNotify;
+    @Bind(R.id.tv_my_club)
+    TextView tvMyClub;
     @Bind(R.id.ll_fan)
     LinearLayout llFan;
     @Bind(R.id.ll_follow)
@@ -198,6 +202,17 @@ public class MeFragment extends BaseFragment {
         } else {
             jumpTo(LoginActivity.class, false);
         }
+    }
+    /**
+     * 我的通知，暂未实现
+     */
+    @OnClick(R.id.tv_my_notify)
+    public void toMyNotify(){
+        showToast("敬请期待~");
+    }
+    @OnClick(R.id.tv_my_club)
+    public void toMyClub(){
+        showToast("敬请期待~");
     }
 
 

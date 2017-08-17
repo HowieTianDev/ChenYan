@@ -194,6 +194,7 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/tv_my_notify"
                 style="@style/ItemExample"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -212,6 +213,7 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/tv_my_club"
                 style="@style/ItemExample"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

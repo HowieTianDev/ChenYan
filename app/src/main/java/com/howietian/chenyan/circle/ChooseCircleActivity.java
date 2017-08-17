@@ -171,7 +171,7 @@ public class ChooseCircleActivity extends BaseActivity {
                     showPopup(dynamicList.get(position), position);
                     popupInputMethodWindow();
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
             }
         });
@@ -207,7 +207,7 @@ public class ChooseCircleActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
             }
 
@@ -237,7 +237,7 @@ public class ChooseCircleActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    jumpTo(LoginActivity.class, true);
+                    jumpTo(LoginActivity.class, false);
                 }
 
             }

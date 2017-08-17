@@ -136,9 +136,11 @@ public class MyInfoActivity extends BaseActivity {
         }
 
         etIntro.setText(user.getIntro());
+
         etSchool.setText(user.getSchool());
-        etPosition.setText(user.getPosition());
+
         etLike.setText(user.getLike());
+
 
         tvBirthday.setText(user.getBirthday());
         etPhone.setText(user.getMobilePhoneNumber());

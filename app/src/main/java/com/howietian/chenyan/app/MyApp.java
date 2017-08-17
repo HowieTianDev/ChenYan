@@ -30,7 +30,7 @@ public class MyApp extends Application {
         @Override
         public void onDisplayImage(Context context, ImageView imageView, String url) {
             Glide.with(context).load(url)//
-                    .placeholder(R.drawable.ic_default_image)//
+                   // .placeholder(R.drawable.ic_default_image)//
                     .error(R.drawable.ic_default_image)//
                     .into(imageView);
         }
