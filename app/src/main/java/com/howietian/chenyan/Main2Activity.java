@@ -36,9 +36,13 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobPushManager;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.PushListener;
 import cn.bmob.v3.listener.SaveListener;
 
 public class Main2Activity extends BaseActivity {
@@ -55,6 +59,40 @@ public class Main2Activity extends BaseActivity {
     CommentWidget commentWidget;
     @Bind(R.id.nineGridView)
     NineGridView nineGridView;
+    @Bind(R.id.btn_push)
+    Button btnPush;
+
+    @OnClick(R.id.btn_push)
+    public void push() {
+//        BmobPushManager bmobPushManager = new BmobPushManager();
+//        bmobPushManager.pushMessageAll("HowieTian", new PushListener() {
+//            @Override
+//            public void done(BmobException e) {
+//                if (e==null){
+//                    showToast("推送成功！");
+//                }else {
+//                    showToast("异常：" + e.getMessage());
+//                }
+//            }
+//        });
+        String installationId = BmobInstallation.getInstallationId(this);
+        BmobPushManager bmobPushManager = new BmobPushManager();
+        BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+        query.addWhereEqualTo("installationId", installationId);
+        bmobPushManager.setQuery(query);
+        bmobPushManager.pushMessage("推送检测成功！", new PushListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                   showToast("推送成功！");
+                } else {
+                   showToast("异常：" + e.getMessage());
+                }
+            }
+        });
+
+
+    }
 
     private List<User> users = new ArrayList<>();
 
@@ -63,7 +101,6 @@ public class Main2Activity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -121,7 +158,7 @@ public class Main2Activity extends BaseActivity {
 //        1,3其实是两个位置，末尾不包括
 //        Flag 为 span如果新增了文字 的前面不包括样式，后面包括样式
         spannableString.setSpan(colorSpan, 1, 3, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-        spannableString.setSpan(backgroundColorSpan,5,7,Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(backgroundColorSpan, 5, 7, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         spannableStringBuilder.append(spannableString);
@@ -131,23 +168,25 @@ public class Main2Activity extends BaseActivity {
     }
 
 
-    private void commentTest(){
-        DComment comment = new DComment("66666666", BmobUser.getCurrentUser(User.class),null,null,null);
+    private void commentTest() {
+        DComment comment = new DComment("66666666", BmobUser.getCurrentUser(User.class), null, null, null);
         commentWidget.setCommentText(comment);
 
     }
-    private void nineTest(){
+
+    private void nineTest() {
         List<ImageInfo> imageInfoList = new ArrayList<>();
-        for(int i = 0;i<9;i++){
+        for (int i = 0; i < 9; i++) {
             ImageInfo imageInfo = new ImageInfo();
             imageInfo.setBigImageUrl("http://img1a.xgo-img.com.cn/pics/1538/a1537491.jpg");
             imageInfo.setThumbnailUrl("http://img1a.xgo-img.com.cn/pics/1538/a1537491.jpg");
             imageInfoList.add(imageInfo);
         }
 
-        nineGridView.setAdapter(new NineGridViewClickAdapter(this,imageInfoList));
+        nineGridView.setAdapter(new NineGridViewClickAdapter(this, imageInfoList));
     }
-    static class ImcageInfo{
+
+    static class ImcageInfo {
         private URL thumbnailUrl;
         private URL bigImageUrl;
     }
@@ -163,7 +202,7 @@ public class Main2Activity extends BaseActivity {
         }
     }
 
-    private void createRank(){
+    private void createRank() {
         Rank rank = new Rank();
         User user = BmobUser.getCurrentUser(User.class);
         rank.setTitle("测试");
@@ -186,15 +225,14 @@ public class Main2Activity extends BaseActivity {
         rank.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
-                if(e == null){
+                if (e == null) {
                     showToast("保存成功");
-                }else{
-                    showToast("保存失败"+e.getMessage()+e.getErrorCode());
+                } else {
+                    showToast("保存失败" + e.getMessage() + e.getErrorCode());
                 }
             }
         });
     }
-
 
 
 }

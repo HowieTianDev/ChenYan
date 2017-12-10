@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -70,8 +72,6 @@ public class MyInfoActivity extends BaseActivity {
     EditText etPosition;
     @Bind(R.id.et_like)
     EditText etLike;
-    @Bind(R.id.btn_save)
-    Button btnSave;
     @Bind(R.id.tv_birthday)
     TextView tvBirthday;
     @Bind(R.id.et_realName)
@@ -110,7 +110,7 @@ public class MyInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDatas();
+
 
     }
 
@@ -123,6 +123,7 @@ public class MyInfoActivity extends BaseActivity {
      * 初始化相关信息
      */
     private void initDatas() {
+        setSupportActionBar(tbMyInfo);
         if (user.getAvatar() != null) {
             loadImage(user.getAvatar().getUrl(), ivAvatar);
         }
@@ -152,7 +153,7 @@ public class MyInfoActivity extends BaseActivity {
     @Override
     public void init() {
         super.init();
-
+        initDatas();
 //        阻止软键盘自动弹出
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -169,11 +170,24 @@ public class MyInfoActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 保存信息按钮
-     */
-    @OnClick(R.id.btn_save)
-    public void saveInfo() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_save:
+                saveInfo();
+                break;
+        }
+        return true;
+    }
+
+//   保存信息
+    private void saveInfo() {
 
         nickName = etNick.getText().toString();
         if (rbBoy.isChecked()) {

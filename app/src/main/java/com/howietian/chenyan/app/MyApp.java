@@ -10,7 +10,9 @@ import com.howietian.chenyan.R;
 import com.howietian.chenyan.entities.User;
 import com.lzy.ninegrid.NineGridView;
 
+import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobUser;
 
 /**
@@ -22,6 +24,10 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         Bmob.initialize(this,Constant.BMOB_KEY);
+        // 使用推送服务时的初始化操作
+        BmobInstallation.getCurrentInstallation().save();
+        // 启动推送服务
+        BmobPush.startWork(this);
         NineGridView.setImageLoader(new GlideImageLoader());
     }
 
