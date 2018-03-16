@@ -2,7 +2,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+
+    >
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,8 +17,8 @@
             android:background="@color/colorPrimary"
             app:layout_scrollFlags="enterAlways|scroll"
             app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
-            app:title="我的资料"
             app:theme="@style/ToolbarTheme"
+            app:title="我的资料"
             app:titleTextColor="@color/white" />
     </android.support.design.widget.AppBarLayout>
 
@@ -77,6 +79,38 @@
                     android:layout_weight="1"
                     android:background="#fff"
                     android:hint="起一个昵称吧"
+                    android:textSize="@dimen/bodySmall" />
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"></View>
+
+
+            <LinearLayout
+                android:id="@+id/ll_club_id"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="28dp"
+                    android:text="社团 ID   "
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+
+                <TextView
+                    android:id="@+id/tv_club_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:background="#fff"
                     android:textSize="@dimen/bodySmall" />
 
             </LinearLayout>
@@ -364,7 +398,49 @@
 
             <View
                 android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"
+                android:orientation="vertical"></View>
+
+            <LinearLayout
+                android:id="@+id/ll_club_intro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="28dp"
+                    android:text="社团简介"
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+
+                <EditText
+                    android:id="@+id/et_club_intro"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:background="@drawable/et_border"
+                    android:gravity="start"
+                    android:hint="介绍下自己的社团吧"
+                    android:lineSpacingExtra="8dp"
+                    android:padding="4dp"
+                    android:scrollbars="vertical"
+                    android:text=""
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodyLarge" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
                 android:layout_height="4dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/divider"
                 android:orientation="vertical"></View>
 

@@ -111,6 +111,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     //    是否收藏和点赞的标志
     boolean isCollect = false;
     boolean isLike = false;
+    String commentNum = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,14 +135,25 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             }
         });*/
 //        nestedScrollview 不需要解决默认滚到recyclerview 第一个item的问题
-
+//  解决nestedscrollview 嵌套 recyclerview 粘滞的问题
         commentList.setNestedScrollingEnabled(false);
 
         initViews();
         queryCommentList();
+        likeIdList = mactivity.getLikeIdList();
+        if (likeIdList == null) {
+            likeIdList = new ArrayList<>();
+        }
 
+        collectIdList = mactivity.getCollectIdList();
+        if (collectIdList == null) {
+            collectIdList = new ArrayList<>();
+        }
 
-//        初始化的时候，不要再查了，直接从comment的属性上拿就好了
+        joinIdList = mactivity.getJoinIdList();
+        if (joinIdList == null) {
+            joinIdList = new ArrayList<>();
+        }
     }
 
     private void back() {
@@ -149,9 +161,29 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         tbActivity.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                commentNum = tvCommentNum.getText().toString();
+                intent.putExtra("commentNum", commentNum);
+                intent.putStringArrayListExtra("likeIdList", likeIdList);
+                intent.putStringArrayListExtra("collectIdList", collectIdList);
+                intent.putStringArrayListExtra("joinIdList", joinIdList);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
+    }
+
+    //重写返回事件，将数据返回上一级页面,去掉superonbackpressed(),才能传Intent。。。。
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        commentNum = tvCommentNum.getText().toString();
+        intent.putExtra("commentNum", commentNum);
+        intent.putStringArrayListExtra("likeIdList", likeIdList);
+        intent.putStringArrayListExtra("collectIdList", collectIdList);
+        intent.putStringArrayListExtra("joinIdList", collectIdList);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void initViews() {
@@ -169,9 +201,9 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
         loadImage(mactivity.getPhoto().getUrl(), ivPhoto);
         tvContent.setText(mactivity.getContent());
-        tvCommentNum.setText("评论（" + mactivity.getCommentNum() + "）");
+        tvCommentNum.setText(mactivity.getCommentNum() + "");
         if (mactivity.getLikeIdList() != null) {
-            tvLikeNum.setText("赞（" + mactivity.getLikeIdList().size() + "）");
+            tvLikeNum.setText(mactivity.getLikeIdList().size() + "");
         }
         tvDeadline.setText(mactivity.getDeadline());
 
@@ -275,11 +307,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     private boolean isShowLike() {
 
         if (mactivity.getLikeIdList() != null && MyApp.isLogin()) {
-            HashSet<String> set = new HashSet<>();
-            for (String id : mactivity.getLikeIdList()) {
-                set.add(id);
-            }
-            if (set.contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
+            if (mactivity.getLikeIdList().contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
                 return true;
             } else {
                 return false;
@@ -293,11 +321,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     //    判断当前用户是否收藏
     private boolean isShowCollect() {
         if (mactivity.getCollectIdList() != null && MyApp.isLogin()) {
-            HashSet<String> set = new HashSet<>();
-            for (String id : mactivity.getCollectIdList()) {
-                set.add(id);
-            }
-            if (set.contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
+            if (mactivity.getCollectIdList().contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
                 return true;
             } else {
                 return false;
@@ -312,7 +336,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         BmobQuery<Comment> query = new BmobQuery<>();
 //        查询该帖子的评论列表
         query.addWhereEqualTo("mActivity", mactivity);
-        query.order("-createdAt");
+        query.order("createdAt");
 //        希望同时查询到发消息的人的信息
         query.include("user");
         query.findObjects(new FindListener<Comment>() {
@@ -322,14 +346,13 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                     comments.clear();
                     comments.addAll(list);
                     adapter.notifyDataSetChanged();
-                    tvCommentNum.setText("评论（" + list.size() + "）");
+                    tvCommentNum.setText(list.size() + "");
                     mactivity.setCommentNum(new Integer(list.size()));
                     mactivity.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
                                 Log.e(TAG, "评论数目更新成功");
-                                tvCommentNum.setText("评论（" + list.size() + "）");
                             } else {
                                 Log.e(TAG, "评论数目更新失败" + e.getErrorCode() + e.getMessage());
                             }
@@ -348,7 +371,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
     @OnClick(R.id.btn_join)
     public void tojoin() {
-        if(MyApp.isLogin()){
+        if (MyApp.isLogin()) {
             User user = BmobUser.getCurrentUser(User.class);
             String school = user.getSchool();
             String phone = user.getMobilePhoneNumber();
@@ -363,8 +386,8 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                     showToast("请先完善个人信息");
                 }
             }
-        }else{
-            jumpTo(LoginActivity.class,true);
+        } else {
+            jumpTo(LoginActivity.class, true);
         }
 
     }
@@ -463,18 +486,12 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     public void setLike() {
         if (MyApp.isLogin()) {
             if (!isLike) {
-
                 toLike();
-
             } else {
-
                 cancelLike();
-
             }
         } else {
-
             jumpTo(LoginActivity.class, false);
-
         }
 
     }
@@ -491,13 +508,14 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         }
         collectIdList.add(BmobUser.getCurrentUser(User.class).getObjectId());
         mactivity.setCollectIdList(collectIdList);
+        ivCollect.setImageResource(R.drawable.ic_favorite_orange_500_24dp);
+        isCollect = true;
+
         mactivity.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
                     Log.e(TAG, "收藏成功");
-                    ivCollect.setImageResource(R.drawable.ic_favorite_orange_500_24dp);
-                    isCollect = true;
                 } else {
                     Log.e(TAG, "收藏失败" + e.getMessage() + e.getErrorCode());
                 }
@@ -518,15 +536,14 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         }
         collectIdList.remove(BmobUser.getCurrentUser(User.class).getObjectId());
         mactivity.setCollectIdList(collectIdList);
+        ivCollect.setImageResource(R.drawable.ic_favorite_border_grey_500_24dp);
+        isCollect = false;
 
         mactivity.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
                     Log.e(TAG, "取消收藏成功");
-                    ivCollect.setImageResource(R.drawable.ic_favorite_border_grey_500_24dp);
-                    isCollect = false;
-
                 } else {
                     Log.e(TAG, "取消收藏失败" + e.getErrorCode() + e.getMessage());
                 }
@@ -542,22 +559,24 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         relation.add(BmobUser.getCurrentUser(User.class));
         mactivity.setLike(relation);
 
-        //                    添加当前用户的ID
+        //添加当前用户的ID
         if (mactivity.getLikeIdList() != null) {
             likeIdList = mactivity.getLikeIdList();
         }
+
         likeIdList.add(BmobUser.getCurrentUser(User.class).getObjectId());
         mactivity.setLikeIdList(likeIdList);
+        tvLikeNum.setText(likeIdList.size() + "");
+        ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
+        isLike = true;
+
         mactivity.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-
-                    tvLikeNum.setText("赞（" + likeIdList.size() + "）");
-                    ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
-                    isLike = true;
-
+                    Log.e(TAG, "文章点赞成功！");
                 } else {
+                    Log.e(TAG, "文章点赞失败！");
                     showToast("设置点赞失败" + e.getMessage() + e.getErrorCode());
                 }
             }
@@ -577,15 +596,17 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         }
         likeIdList.remove(BmobUser.getCurrentUser(User.class).getObjectId());
         mactivity.setLikeIdList(likeIdList);
+        tvLikeNum.setText(likeIdList.size() + "");
+        ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
+        isLike = false;
 
         mactivity.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    tvLikeNum.setText("赞（" + likeIdList.size() + "）");
-                    ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
-                    isLike = false;
+                    Log.e(TAG, "取消文章点赞成功！");
                 } else {
+                    Log.e(TAG, "取消文章点赞失败！");
                     showToast("取消点赞失败！" + e.getMessage() + e.getErrorCode());
                 }
             }
@@ -654,6 +675,8 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
                 llBottom.setVisibility(View.VISIBLE);
 //                在popupwindow结束后，重新查询评论列表
                 queryCommentList();
+                hidePopUpWindow();
+
             }
         });
 //        监听触屏事件
@@ -675,15 +698,19 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
             public void run() {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                scrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.scrollTo(0, 0);
-                    }
-                });
+
             }
         }, 0);
     }
+
+    //  设置软键盘隐藏
+    private void hidePopUpWindow() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+        }
+    }
+
 
     /**
      * 实现具体的点击事件

@@ -23,18 +23,27 @@ public class User extends BmobUser {
     private String position;
     private String like;
     private String birthday;
+    private String clubId;
+    private String installationId;
+
+    private Boolean isClub;
+    private String clubProfile;
+
 
     private Integer dynamicNum = 0;
     private Integer fanNum = 0;
     private BmobRelation focus;
+    private BmobRelation members;
+
     private ArrayList<String> focusIds;
+    private ArrayList<String> memberIds;
 
 
 
     public User() {
     }
 
-    public User(String nickName, String realName, BmobFile avatar, Boolean gender, String intro, String school, String position, String like, String birthday, Integer dynamicNum, Integer fanNum, BmobRelation focus, ArrayList<String> focusIds) {
+    public User(String nickName, String realName, BmobFile avatar, Boolean gender, String intro, String school, String position, String like, String birthday, String clubId, String installationId, Boolean isClub, String clubProfile, Integer dynamicNum, Integer fanNum, BmobRelation focus, BmobRelation members, ArrayList<String> focusIds, ArrayList<String> memberIds) {
         this.nickName = nickName;
         this.realName = realName;
         this.avatar = avatar;
@@ -44,10 +53,24 @@ public class User extends BmobUser {
         this.position = position;
         this.like = like;
         this.birthday = birthday;
+        this.clubId = clubId;
+        this.installationId = installationId;
+        this.isClub = isClub;
+        this.clubProfile = clubProfile;
         this.dynamicNum = dynamicNum;
         this.fanNum = fanNum;
         this.focus = focus;
+        this.members = members;
         this.focusIds = focusIds;
+        this.memberIds = memberIds;
+    }
+
+    public String getInstallationId() {
+        return installationId;
+    }
+
+    public void setInstallationId(String installationId) {
+        this.installationId = installationId;
     }
 
     public String getNickName() {
@@ -122,6 +145,30 @@ public class User extends BmobUser {
         this.birthday = birthday;
     }
 
+    public String getClubId() {
+        return clubId;
+    }
+
+    public void setClubId(String clubId) {
+        this.clubId = clubId;
+    }
+
+    public Boolean getClub() {
+        return isClub;
+    }
+
+    public void setClub(Boolean club) {
+        isClub = club;
+    }
+
+    public String getClubProfile() {
+        return clubProfile;
+    }
+
+    public void setClubProfile(String clubProfile) {
+        this.clubProfile = clubProfile;
+    }
+
     public Integer getDynamicNum() {
         return dynamicNum;
     }
@@ -146,12 +193,28 @@ public class User extends BmobUser {
         this.focus = focus;
     }
 
+    public BmobRelation getMembers() {
+        return members;
+    }
+
+    public void setMembers(BmobRelation members) {
+        this.members = members;
+    }
+
     public ArrayList<String> getFocusIds() {
         return focusIds;
     }
 
     public void setFocusIds(ArrayList<String> focusIds) {
         this.focusIds = focusIds;
+    }
+
+    public ArrayList<String> getMemberIds() {
+        return memberIds;
+    }
+
+    public void setMemberIds(ArrayList<String> memberIds) {
+        this.memberIds = memberIds;
     }
 
     @Override
@@ -166,10 +229,16 @@ public class User extends BmobUser {
                 ", position='" + position + '\'' +
                 ", like='" + like + '\'' +
                 ", birthday='" + birthday + '\'' +
+                ", clubId='" + clubId + '\'' +
+                ", installationId='" + installationId + '\'' +
+                ", isClub=" + isClub +
+                ", clubProfile='" + clubProfile + '\'' +
                 ", dynamicNum=" + dynamicNum +
                 ", fanNum=" + fanNum +
                 ", focus=" + focus +
+                ", members=" + members +
                 ", focusIds=" + focusIds +
+                ", memberIds=" + memberIds +
                 '}';
     }
 }

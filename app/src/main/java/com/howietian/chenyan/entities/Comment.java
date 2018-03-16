@@ -6,7 +6,7 @@ import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
- * Created by 83624 on 2017/7/3.
+ * Created by 83624 on 2017/cup_7/3.
  */
 
 public class Comment extends BmobObject {

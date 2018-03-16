@@ -10,16 +10,22 @@ import com.howietian.chenyan.R;
 import com.howietian.chenyan.entities.User;
 import com.lzy.ninegrid.NineGridView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobUser;
 
 /**
- * Created by 83624 on 2017/6/30.
+ * Created by 83624 on 2017/cup_6/30.
  */
 
 public class MyApp extends Application {
+
+    public static List<User> userList = new ArrayList<>();
+
     @Override
     public void onCreate() {
         super.onCreate();

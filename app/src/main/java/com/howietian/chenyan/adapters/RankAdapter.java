@@ -18,13 +18,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by HowieTian on 2017/8/2 0002.
+ * Created by HowieTian on 2017/cup_8/2 0002.
  */
 
 public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder> {
     private Context context;
     private List<Rank> rankList = new ArrayList<>();
-    private int[] images = new int[]{R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4, R.drawable.banner5, R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4, R.drawable.banner5, R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4, R.drawable.banner5};
     private onItemClickListener mOnItemClickListener;
 
     public interface onItemClickListener {

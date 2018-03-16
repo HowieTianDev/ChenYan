@@ -29,14 +29,19 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity android:name=".entrance.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".entrance.LoginActivity" />
         <activity android:name=".entrance.RegisterActivity" />
         <activity android:name=".entrance.ForgetPwdActivity" />
         <activity android:name=".me.MyInfoActivity" />
+        <!-- 软键盘弹出，界面不变 -->
         <activity android:name=".home.ArticleDetailActivity" />
         <activity android:name=".home.ActivityDetailActivity" />
         <activity android:name=".home.PublishAActivity" />
@@ -47,12 +52,7 @@
         <activity
             android:name=".home.SearchActivity"
             android:theme="@style/SearchTheme" />
-        <activity android:name=".Main2Activity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Main2Activity"></activity>
         <activity android:name=".circle.PubDynamicActivity" />
         <activity android:name=".circle.TypeActivity" />
         <activity android:name=".circle.ChooseCircleActivity" />
@@ -75,7 +75,7 @@
         <!-- 用于进程保活 -->
         <service
             android:name="cn.bmob.push.lib.service.PushNotifyService"
-            android:process=":bmobpush"></service>
+            android:process=":bmobpush" />
 
         <receiver android:name="cn.bmob.push.PushReceiver">
             <intent-filter>
@@ -109,7 +109,12 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".me.club.MyClubActivity"></activity>
+        <activity android:name=".me.club.MyClubActivity" />
+        <activity android:name=".Main3Activity" />
+        <activity android:name=".me.club.ApplyClubActivity" />
+        <activity android:name=".me.club.ApplySuccessActivity" />
+        <activity android:name=".me.club.ManageActivity" />
+        <activity android:name=".me.MyMsgActivity"></activity>
     </application>
 
 </manifest>

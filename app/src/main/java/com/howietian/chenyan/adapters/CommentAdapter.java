@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -29,7 +30,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
- * Created by 83624 on 2017/7/3.
+ * Created by 83624 on 2017/cup_7/3.
  */
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHolder> {
@@ -72,43 +73,44 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             holder.tvLikeNum.setText(comment.getLikeIdList().size() + "");
         }
 
-
+// 初始化评论点赞
         if (MyApp.isLogin()) {
             if (comment.getLikeIdList() != null) {
-                for (String id : comment.getLikeIdList()) {
-                    if (id.equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
-                        holder.ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
-                        isLike[0] = true;
-                        break;
-                    } else {
-                        holder.ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
-                        isLike[0] = false;
-                    }
+                if(comment.getLikeIdList().contains(BmobUser.getCurrentUser(User.class).getObjectId())){
+                    holder.ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
+                    isLike[0] = true;
+                }else{
+                    holder.ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
                 }
+
             } else {
                 holder.ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
             }
-
         } else {
             holder.ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
         }
 
-        likeIdList.clear();
-        holder.ivLike.setOnClickListener(new View.OnClickListener() {
+
+        holder.llLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//              每次点赞id列表都需要清空一次
+                likeIdList.clear();
 //                首先判断用户是否登录
                 if (MyApp.isLogin()) {
                     if (!isLike[0]) {
-                        BmobRelation relation = new BmobRelation();
+                        /*BmobRelation relation = new BmobRelation();
                         relation.add(BmobUser.getCurrentUser(User.class));
-                        comment.setLike(relation);
+                        comment.setLike(relation);*/
 
                         if (comment.getLikeIdList() != null) {
                             likeIdList = comment.getLikeIdList();
                         }
                         likeIdList.add(BmobUser.getCurrentUser(User.class).getObjectId());
                         comment.setLikeIdList(likeIdList);
+                        holder.tvLikeNum.setText(likeIdList.size() + "");
+                        holder.ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
+                        isLike[0] = true;
 
                         comment.update(new UpdateListener() {
                             @Override
@@ -116,10 +118,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
                                 if (e == null) {
                                     Log.e(TAG, "点赞更新成功");
 //                                查询当前评论的点赞数目，并更新 总数量
-
-                                    holder.tvLikeNum.setText(likeIdList.size() + "");
-                                    holder.ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
-                                    isLike[0] = true;
                                 } else {
                                     Log.e(TAG, "点赞更新失败" + e.getErrorCode() + e.getMessage());
                                 }
@@ -128,27 +126,25 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
 
                     } else {
 
-                        BmobRelation relation = new BmobRelation();
+                        /*BmobRelation relation = new BmobRelation();
                         relation.remove(BmobUser.getCurrentUser(User.class));
-                        comment.setLike(relation);
+                        comment.setLike(relation);*/
 
                         if (comment.getLikeIdList() != null) {
                             likeIdList = comment.getLikeIdList();
                         }
+
                         likeIdList.remove(BmobUser.getCurrentUser(User.class).getObjectId());
                         comment.setLikeIdList(likeIdList);
+                        holder.tvLikeNum.setText(likeIdList.size() + "");
+                        holder.ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
+                        isLike[0] = false;
 
                         comment.update(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
                                     Log.e(TAG, "取消点赞成功");
-//                                查询取消点赞后的点赞总数 并将最新数据更新到 likenum中
-
-//                                将该用户的ID，从赞这个评论的list中移出
-                                    holder.tvLikeNum.setText(likeIdList.size() + "");
-                                    holder.ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
-                                    isLike[0] = false;
 
                                 } else {
                                     Log.e(TAG, "取消点赞更新失败" + e.getErrorCode() + e.getMessage());
@@ -172,7 +168,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
         return comments.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_avatar)
         ImageView ivAvatar;
         @Bind(R.id.tv_nickName)
@@ -185,7 +181,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
         TextView tvLikeNum;
         @Bind(R.id.iv_like)
         ImageView ivLike;
-
+        @Bind(R.id.ll_like)
+        LinearLayout llLike;
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

@@ -25,8 +25,10 @@ import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class LoginActivity extends BaseActivity {
     @Bind(R.id.tv_register)
@@ -209,12 +211,20 @@ public class LoginActivity extends BaseActivity {
                         jumpTo(MainActivity.class, true);
                         progressDialog.dismiss();
                     } else {
-                        showToast("用户名或密码错误！");
+                        showToast("用户名或密码错误！"+e.getMessage()+e.getErrorCode());
                         progressDialog.dismiss();
                     }
                 }
             });
 
+            String installationId = BmobInstallation.getInstallationId(this);
+            user.setInstallationId(installationId);
+            user.update(new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+
+                }
+            });
 
         }
     }

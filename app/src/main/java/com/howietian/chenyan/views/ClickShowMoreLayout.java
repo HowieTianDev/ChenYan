@@ -15,7 +15,7 @@ import com.howietian.chenyan.R;
 import com.howietian.chenyan.utils.UIHelper;
 
 /**
- * Created by 83624 on 2017/7/19.
+ * Created by 83624 on 2017/cup_7/19.
  */
 
 public class ClickShowMoreLayout extends LinearLayout implements View.OnClickListener {
@@ -99,7 +99,6 @@ public class ClickShowMoreLayout extends LinearLayout implements View.OnClickLis
 
     /**
      * 通过判断点击部分的文字和clickText是否相同，来确定具体的行为
-     *
      * @param view
      */
     @Override

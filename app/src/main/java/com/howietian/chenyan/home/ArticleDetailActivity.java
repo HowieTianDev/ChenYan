@@ -18,6 +18,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -78,6 +81,8 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     ImageView ivLike;
     @Bind(R.id.ll_bottom)
     LinearLayout llBottom;
+    @Bind(R.id.webView_article)
+    WebView wbArticle;
 
 
     private static final String TAG = "Article";
@@ -99,7 +104,8 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     //    是否点赞和收藏的标志
     boolean isCollect = false;
     boolean isLike = false;
-
+    //    评论的数量
+    String  commentNum = "";
 
 
     @Override
@@ -118,31 +124,50 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     public void init() {
         super.init();
         back();
-       /* scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(0, 0);
-            }
-        });*/
-       commentList.setNestedScrollingEnabled(false);
+
+        commentList.setNestedScrollingEnabled(false);
         initDatas();
 
         queryCommentList();
-        //queryLikes();
+        likeIdList = article.getLikeIdList();
+        if(likeIdList == null){
+            likeIdList = new ArrayList<>();
+        }
 
+        collectIdList = article.getCollectIdList();
+        if(collectIdList == null){
+            collectIdList = new ArrayList<>();
+        }
 
     }
 
-    //返回按钮
+    //返回按钮,将是否点赞、收藏、评论数量返回上一级页面
     private void back() {
         setSupportActionBar(tbArticle);
         tbArticle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                commentNum = tvCommentNum.getText().toString();
+                intent.putExtra("commentNum",commentNum);
+                intent.putStringArrayListExtra("likeIdList",likeIdList);
+                intent.putStringArrayListExtra("collectIdList",collectIdList);
+                setResult(RESULT_OK,intent);
                 finish();
             }
         });
 
+    }
+//重写返回事件，将数据返回上一级页面,去掉superonbackpressed(),才能传Intent。。。。
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        commentNum = tvCommentNum.getText().toString();
+        intent.putExtra("commentNum",commentNum);
+        intent.putStringArrayListExtra("likeIdList",likeIdList);
+        intent.putStringArrayListExtra("collectIdList",collectIdList);
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     private void initDatas() {
@@ -153,11 +178,23 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         tvTitle.setText(article.getTitle());
         tvUpTime.setText(article.getUpTime());
         loadImage(article.getPhoto().getUrl(), ivImage);
+        wbArticle.loadUrl(article.getUrl());
+        // 设置webview只能用内置浏览器打开
+        WebSettings wSet = wbArticle.getSettings();
+        wSet.setJavaScriptEnabled(true);
+        wbArticle.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+                view.loadUrl(url);
+                return true;
+            }
+        });
 
         tvContent.setText(article.getContent());
-        tvCommentNum.setText("评论（" + article.getCommentNum() + "）");
-        if(article.getLikeIdList()!=null){
-            tvLikeNum.setText("赞（" + article.getLikeIdList().size() + "）");
+        if (article.getCommentNum() != null) {
+            tvCommentNum.setText(article.getCommentNum()+"");
+        }
+        if (article.getLikeIdList() != null) {
+            tvLikeNum.setText(article.getLikeIdList().size()+"");
         }
 
 
@@ -190,11 +227,7 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     private boolean isShowLike() {
 
         if (article.getLikeIdList() != null && MyApp.isLogin()) {
-            HashSet<String> set = new HashSet<>();
-            for (String id : article.getLikeIdList()) {
-                set.add(id);
-            }
-            if (set.contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
+            if (article.getLikeIdList().contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
                 return true;
             } else {
                 return false;
@@ -207,12 +240,9 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
 
     //    判断当前用户是否收藏
     private boolean isShowCollect() {
+
         if (article.getCollectIdList() != null && MyApp.isLogin()) {
-            HashSet<String> set = new HashSet<>();
-            for (String id : article.getCollectIdList()) {
-                set.add(id);
-            }
-            if (set.contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
+            if (article.getCollectIdList().contains(BmobUser.getCurrentUser(User.class).getObjectId())) {
                 return true;
             } else {
                 return false;
@@ -227,7 +257,7 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         BmobQuery<Comment> query = new BmobQuery<>();
 //        查询推文的评论列表
         query.addWhereEqualTo("article", article);
-        query.order("-createdAt");
+        query.order("createdAt");
         query.include("user");
         query.findObjects(new FindListener<Comment>() {
             @Override
@@ -239,14 +269,13 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
 
 //                   更新该推文的评论数量
                     article.setCommentNum(list.size());
-                    tvCommentNum.setText("评论（" + list.size() + "）");
+                    tvCommentNum.setText( list.size() +"");
                     article.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
                                 Log.e(TAG, "评论数目更新成功！");
 //                              在查询评论数量成功后且更新该推文的评论数量成功后，在更新UI
-                                tvCommentNum.setText("评论（" + list.size() + "）");
                             } else {
                                 Log.e(TAG, "评论数目更新失败！" + e.getMessage() + e.getErrorCode());
                             }
@@ -315,16 +344,16 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         if (article.getCollectIdList() != null) {
             collectIdList = article.getCollectIdList();
         }
-        collectIdList.add(user.getObjectId());
+        collectIdList.add(BmobUser.getCurrentUser().getObjectId());
         article.setCollectIdList(collectIdList);
+        ivCollect.setImageResource(R.drawable.ic_favorite_orange_500_24dp);
+        isCollect = true;
+
         article.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
                     Log.e(TAG, "收藏成功");
-
-                    ivCollect.setImageResource(R.drawable.ic_favorite_orange_500_24dp);
-                    isCollect = true;
                 } else {
                     Log.e(TAG, "收藏失败" + e.getMessage() + e.getErrorCode());
                 }
@@ -344,16 +373,13 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         }
         collectIdList.remove(user.getObjectId());
         article.setCollectIdList(collectIdList);
+        ivCollect.setImageResource(R.drawable.ic_favorite_border_grey_500_24dp);
+        isCollect = false;
         article.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
                     Log.e(TAG, "取消收藏成功");
-
-
-                    ivCollect.setImageResource(R.drawable.ic_favorite_border_grey_500_24dp);
-                    isCollect = false;
-
                 } else {
                     Log.e(TAG, "取消收藏失败" + e.getErrorCode() + e.getMessage());
                 }
@@ -374,17 +400,18 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         }
         likeIdList.add(user.getObjectId());
         article.setLikeIdList(likeIdList);
+        tvLikeNum.setText(likeIdList.size()+"");
+        ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
+        isLike = true;
         article.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
                     //queryLikes();
-                    tvLikeNum.setText("赞（"+likeIdList.size()+"）");
-                    ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
-                    isLike = true;
+                   Log.e(TAG,"文章点赞成功！");
 
                 } else {
-                    showToast("设置点赞失败" + e.getMessage() + e.getErrorCode());
+                   Log.e(TAG,"文章点赞失败！"+e.getErrorCode()+e.getMessage());
                 }
             }
         });
@@ -403,51 +430,21 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         }
         likeIdList.remove(BmobUser.getCurrentUser(User.class).getObjectId());
         article.setLikeIdList(likeIdList);
+        tvLikeNum.setText( likeIdList.size() + "");
+        ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
+        isLike = false;
         article.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-//                    queryLikes();
-                    tvLikeNum.setText("赞（"+likeIdList.size()+"）");
-                    ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
-                    isLike = false;
+                    Log.e(TAG,"文章取消点赞成功！");
                 } else {
-                    showToast("取消点赞失败！" + e.getMessage() + e.getErrorCode());
+                    Log.e(TAG,"文章取消点赞失败！");
                 }
             }
         });
     }
 
-//    //    查询点赞的情况
-//    private void queryLikes() {
-//        BmobQuery<User> query = new BmobQuery<>();
-////      根据当前的帖子查询点赞的所有用户
-//        query.addWhereRelatedTo("like", new BmobPointer(article));
-//        query.findObjects(new FindListener<User>() {
-//            @Override
-//            public void done(final List<User> list, BmobException e) {
-//                if (e == null) {
-//
-//                    article.setLikeNum(new Integer(list.size()));
-//                    article.update(new UpdateListener() {
-//                        @Override
-//                        public void done(BmobException e) {
-//                            if (e == null) {
-//                                Log.e(TAG, "点赞数目更新成功");
-////                                在查询成功且将查询到的数目更新到article的属性上后，更新UI，不需要利用handler来更新UI了
-//                                tvLikeNum.setText("赞（" + list.size() + "）");
-//                            } else {
-//                                Log.e(TAG, "点赞数目更新失败" + e.getMessage() + e.getErrorCode());
-//                            }
-//                        }
-//                    });
-////
-//                } else {
-//                    showToast("查询失败" + e.getMessage() + e.getErrorCode());
-//                }
-//            }
-//        });
-//    }
 
     //    弹出底部的popupwindow
     private void showPopup() {
@@ -476,9 +473,11 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
+
                 llBottom.setVisibility(View.VISIBLE);
 //                在popupwindow结束后，重新查询评论列表
                 queryCommentList();
+                closeSoftKeybord(etComment, ArticleDetailActivity.this);
             }
         });
 //        监听触屏事件
@@ -499,14 +498,22 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
             public void run() {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                scrollView.post(new Runnable() {
+                //哇！别人的代码！这个东西让我找了好久。。。
+             /*   scrollView.post(new Runnable() {
                     @Override
                     public void run() {
                         scrollView.scrollTo(0, 0);
                     }
-                });
+                });*/
             }
         }, 0);
+    }
+
+    // 隐藏软键盘的方法
+
+    private void closeSoftKeybord(EditText mEditText, Context mContext) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
     }
 
     @Override

@@ -17,7 +17,7 @@ import com.howietian.chenyan.circle.CircleFragment;
 import com.howietian.chenyan.entities.DComment;
 
 /**
- * Created by 83624 on 2017/7/21.
+ * Created by 83624 on 2017/cup_7/21.
  */
 
 public class CommentWidget extends TextView {

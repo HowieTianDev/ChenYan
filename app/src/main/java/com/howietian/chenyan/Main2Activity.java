@@ -77,20 +77,23 @@ public class Main2Activity extends BaseActivity {
 //        });
         String installationId = BmobInstallation.getInstallationId(this);
         BmobPushManager bmobPushManager = new BmobPushManager();
+
         BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-        query.addWhereEqualTo("installationId", installationId);
+        String minstallationId = "9089598562007E18FA516D2239CEFF74";
+        query.addWhereEqualTo("installationId", minstallationId);
         bmobPushManager.setQuery(query);
-        bmobPushManager.pushMessage("推送检测成功！", new PushListener() {
+        bmobPushManager.pushMessage("给oppo的消息", new PushListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                   showToast("推送成功！");
+                    showToast("发送成功！");
                 } else {
-                   showToast("异常：" + e.getMessage());
+                    showToast("发送失败！");
                 }
             }
         });
-
+        String id = BmobInstallation.getInstallationId(this);
+        showToast(id);
 
     }
 
@@ -114,7 +117,7 @@ public class Main2Activity extends BaseActivity {
 
         user.setNickName("小贱人");
         user.setObjectId("###");
-        clickShowMoreLayout.setText("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n");
+        clickShowMoreLayout.setText("1\n2\n3\ncup_4\ncup_5\ncup_6\ncup_7\ncup_8\ncup_9\ncup_10\n");
         for (int i = 0; i < 6; i++) {
             users.add(user);
         }
@@ -140,7 +143,7 @@ public class Main2Activity extends BaseActivity {
 //        Matisse.from(Main2Activity.this)
 //                .choose(MimeType.allOf())
 //                .countable(true)
-//                .maxSelectable(9)
+//                .maxSelectable(cup_9)
 //                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
 //                .thumbnailScale(0.85f)
 //                .imageEngine(new GlideEngine())
@@ -211,16 +214,16 @@ public class Main2Activity extends BaseActivity {
 //       // File file1 = new File("")
 //        BmobFile bfile = new BmobFile(file);
 //        rank.setImage(bfile);
-        rank.setNo1(user);
-        rank.setNo2(user);
-        rank.setNo3(user);
-        rank.setNo4(user);
-        rank.setNo5(user);
-        rank.setNo6(user);
-        rank.setNo7(user);
-        rank.setNo8(user);
-        rank.setNo9(user);
-        rank.setNo10(user);
+        rank.setOne(user);
+        rank.setTwo(user);
+        rank.setThree(user);
+        rank.setFour(user);
+        rank.setFive(user);
+        rank.setSix(user);
+        rank.setSeven(user);
+        rank.setEight(user);
+        rank.setNine(user);
+        rank.setTen(user);
 
         rank.save(new SaveListener<String>() {
             @Override

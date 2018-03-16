@@ -7,7 +7,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
- * Created by 83624 on 2017/6/29.
+ * Created by 83624 on 2017/cup_6/29.
  */
 
 public class Article extends BmobObject{
@@ -17,6 +17,7 @@ public class Article extends BmobObject{
     private Integer likeNum;
     private Integer commentNum;
     private String upTime;
+    private String url;
 
     private BmobRelation like;
     private BmobRelation collect;
@@ -26,19 +27,6 @@ public class Article extends BmobObject{
     private ArrayList<String> collectIdList;
 
     public Article() {
-    }
-
-    public Article(String title, String content, BmobFile photo, Integer likeNum, Integer commentNum, String upTime, BmobRelation like, BmobRelation collect, ArrayList<String> likeIdList, ArrayList<String> collectIdList) {
-        this.title = title;
-        this.content = content;
-        this.photo = photo;
-        this.likeNum = likeNum;
-        this.commentNum = commentNum;
-        this.upTime = upTime;
-        this.like = like;
-        this.collect = collect;
-        this.likeIdList = likeIdList;
-        this.collectIdList = collectIdList;
     }
 
     public String getTitle() {
@@ -89,6 +77,14 @@ public class Article extends BmobObject{
         this.upTime = upTime;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public BmobRelation getLike() {
         return like;
     }
@@ -121,7 +117,6 @@ public class Article extends BmobObject{
         this.collectIdList = collectIdList;
     }
 
-
     @Override
     public String toString() {
         return "Article{" +
@@ -131,6 +126,7 @@ public class Article extends BmobObject{
                 ", likeNum=" + likeNum +
                 ", commentNum=" + commentNum +
                 ", upTime='" + upTime + '\'' +
+                ", url='" + url + '\'' +
                 ", like=" + like +
                 ", collect=" + collect +
                 ", likeIdList=" + likeIdList +

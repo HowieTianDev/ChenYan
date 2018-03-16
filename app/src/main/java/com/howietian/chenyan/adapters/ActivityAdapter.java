@@ -3,6 +3,7 @@ package com.howietian.chenyan.adapters;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 import cn.bmob.v3.BmobUser;
 
 /**
- * Created by 83624 on 2017/7/3.
+ * Created by 83624 on 2017/cup_7/3.
  */
 
 public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -66,15 +67,15 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     //这里根据viewType的不同，返回两种布局
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == NORMAL_TYPE) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_activity, parent, false);
-            NormalViewHolder holder = new NormalViewHolder(view);
-            return holder;
-        } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.footer_view, parent, false);
-            FootViewHolder footer = new FootViewHolder(view);
-            return footer;
-        }
+        // if (viewType == NORMAL_TYPE) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_activity, parent, false);
+        NormalViewHolder holder = new NormalViewHolder(view);
+        return holder;
+//        } else {
+//            View view = LayoutInflater.from(context).inflate(R.layout.footer_view, parent, false);
+//            FootViewHolder footer = new FootViewHolder(view);
+//            return footer;
+//        }
 
     }
 
@@ -85,40 +86,46 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             final MActivity activity = activityList.get(position);
 //        封面图片，日后实现
-            Glide.with(context).load(activity.getPhoto().getUrl()).into(((NormalViewHolder) holder).image);
+            if (activity.getPhoto() != null) {
+                Glide.with(context).load(activity.getPhoto().getUrl()).into(((NormalViewHolder) holder).image);
+            }
             //   ((NormalViewHolder.holderimage.setImageResource(R.drawable.banner5);
             ((NormalViewHolder) holder).title.setText(activity.getTitle());
             ((NormalViewHolder) holder).intro.setText(activity.getContent());
             if (activity.getLikeIdList() != null) {
                 ((NormalViewHolder) holder).tvLike.setText(activity.getLikeIdList().size() + "");
             }
-            ((NormalViewHolder) holder).tvComment.setText(activity.getCommentNum().toString());
+            if (activity.getCommentNum() != null) {
+                ((NormalViewHolder) holder).tvComment.setText(activity.getCommentNum().toString());
+            }
+
 
 /**
  * 实现三种报名标志的选择
  */
-            if (activity.getJoinIdList() != null) {
-                for (String id : activity.getJoinIdList()) {
-                    if (MyApp.isLogin()) {
-                        if (id.equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
-                            ((NormalViewHolder) holder).tvFlag.setText(R.string.joined);
-                            break;
-                        }
-                    }
+
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String datestring = dateFormat.format(new Date());
+                Date deadline = dateFormat.parse(activity.getDeadline());
+                Date currentdate = new Date();
+
+                if (currentdate.before(deadline) || activity.getDeadline().equals(datestring)) {
+                    ((NormalViewHolder) holder).tvFlag.setText(R.string.on_join);
+                } else {
+                    ((NormalViewHolder) holder).tvFlag.setText(R.string.end_join);
                 }
-            } else {
-                try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    String datestring = dateFormat.format(new Date());
-                    Date deadline = dateFormat.parse(activity.getDeadline());
-                    Date currentdate = new Date();
-                    if (currentdate.before(deadline) || activity.getDeadline().equals(datestring)) {
-                        ((NormalViewHolder) holder).tvFlag.setText(R.string.on_join);
-                    } else {
-                        ((NormalViewHolder) holder).tvFlag.setText(R.string.end_join);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            // 登陆才考虑已报名
+            if (MyApp.isLogin()) {
+                if (activity.getJoinIdList() != null) { //有人报名，考虑是否已报名
+                    if (activity.getJoinIdList().contains(BmobUser.getCurrentUser().getObjectId())) {
+                        ((NormalViewHolder) holder).tvFlag.setText(R.string.joined);
                     }
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
             }
 
@@ -132,51 +139,19 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 });
             }
-        } else {
-
-            holder.itemView.setVisibility(View.VISIBLE);
-            holder.itemView.setPadding(0, 0, 0, 0);
-            if (activityList.size() < PAGE_ITEM_COUNT) {
-                holder.itemView.setVisibility(View.GONE);
-                holder.itemView.setPadding(0, -holder.itemView.getHeight(), 0, 0);
-            } else {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        holder.itemView.setVisibility(View.GONE);
-                        holder.itemView.setPadding(0, -holder.itemView.getHeight(), 0, 0);
-
-                    }
-                }, 1000);
-            }
-
-
         }
+
     }
 
 
     @Override
     public int getItemCount() {
-        return activityList.size() == 0 ? 0 : activityList.size() + 1;
-
-
-    }
-
-    //    根据位置的不同，返回不同的View类型
-    @Override
-    public int getItemViewType(int position) {
-
-        if (position == getItemCount() - 1) {
-            return FOOTER_TYPE;
-        } else {
-            return NORMAL_TYPE;
-        }
-
+        return activityList.size();
     }
 
 
     //    normal item 的viewholder
-    public class NormalViewHolder extends RecyclerView.ViewHolder {
+     static class NormalViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.image)
         ImageView image;
         @Bind(R.id.title)

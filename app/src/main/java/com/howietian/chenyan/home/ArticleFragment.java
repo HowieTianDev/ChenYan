@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,11 @@ import com.howietian.chenyan.adapters.ArticleAdapter;
 import com.howietian.chenyan.app.Constant;
 import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.Article;
+import com.howietian.chenyan.entities.User;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,9 +33,12 @@ import java.util.List;
 
 import butterknife.Bind;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +46,8 @@ import cn.bmob.v3.listener.FindListener;
 public class ArticleFragment extends BaseFragment {
     @Bind(R.id.recycleView)
     RecyclerView recyclerView;
-    @Bind(R.id.swipeLayout)
-    SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.swipeLayout_article)
+    SmartRefreshLayout swipeRefreshLayout;
 
 
     private List<Article> articles = new ArrayList<>();
@@ -47,11 +56,13 @@ public class ArticleFragment extends BaseFragment {
     private int lastVisibleItem;
     private int limit = Constant.LIMIT;
     public static final String FROM_ARTICLE = Constant.FROM_ARTICLE;
+    private static final int ARTICLE_REQUEST_CODE = 0;
 
     private static final int PULL_REFRESH = 0;
     private static final int LOAD_MORE = 1;
 
     private String lastTime;
+    int currentPosition;
 
     public ArticleFragment() {
         // Required empty public constructor
@@ -67,7 +78,9 @@ public class ArticleFragment extends BaseFragment {
     public void init() {
         super.init();
 
-        swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.autoRefresh();
+
+
         manager = new LinearLayoutManager(getContext());
         /**
          * 初始化加载数据
@@ -93,62 +106,63 @@ public class ArticleFragment extends BaseFragment {
     /**
      * RecycleView Item 的点击事件
      */
-    private void setItemClick(){
+    private void setItemClick() {
         articleAdapter.setOnItemClickListener(new ArticleAdapter.onItemClickListener() {
             @Override
             public void onClick(int position) {
-                Intent intent = new Intent(getContext(),ArticleDetailActivity.class);
+                Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
                 /**
                  * 把Article对象转化为通过Gson转化为字符串，传递到详情页
                  */
+                currentPosition = position;
                 Article article = articles.get(position);
-                String msg = new Gson().toJson(article,Article.class);
-                intent.putExtra(FROM_ARTICLE,msg);
-                jumpTo(intent,false);
+                String msg = new Gson().toJson(article, Article.class);
+                intent.putExtra(FROM_ARTICLE, msg);
+                startActivityForResult(intent, ARTICLE_REQUEST_CODE);
             }
         });
     }
-    /**
-     * 从详情页返回时，自动刷新
-     */
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getData(PULL_REFRESH);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ARTICLE_REQUEST_CODE && resultCode == RESULT_OK) {
+            String commentNum = data.getStringExtra("commentNum");
+            ArrayList<String> likeIdList = data.getStringArrayListExtra("likeIdList");
+            ArrayList<String> collectIdList = data.getStringArrayListExtra("collectIdList");
+            Article article = articles.get(currentPosition);
+            Log.e("测试", commentNum);
+            article.setCommentNum(Integer.valueOf(commentNum));
+            article.setCollectIdList(collectIdList);
+            article.setLikeIdList(likeIdList);
+            articles.set(currentPosition, article);
+        }
     }
 
     /**
      * 刷新操作
      */
-    private void refresh(){
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    private void refresh() {
+        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(RefreshLayout refreshlayout) {
                 getData(PULL_REFRESH);
             }
         });
     }
+
     /**
      * 上拉加载操作,通过监听recyclerview的滚动事件和状态，
      * 当滑动到最底部且手指离开屏幕后，触发此操作
      */
-    private void loadMore(){
+    private void loadMore() {
 //        最后一个可以看到的item
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        swipeRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(newState == RecyclerView.SCROLL_STATE_IDLE&&lastVisibleItem+1==articleAdapter.getItemCount()){
-                    getData(LOAD_MORE);
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = manager.findLastVisibleItemPosition();
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                getData(LOAD_MORE);
             }
         });
     }
@@ -157,14 +171,14 @@ public class ArticleFragment extends BaseFragment {
      * 分页获取数据，分别为下拉刷新，上拉加载
      */
 
-    private void getData(final int type){
+    private void getData(final int type) {
         BmobQuery<Article> query = new BmobQuery<>();
         query.order("-createdAt");
 //        设置每页查询的item数目
         query.setLimit(limit);
 
 //       加载更多
-        if(type == LOAD_MORE){
+        if (type == LOAD_MORE) {
             Date date = null;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
@@ -179,27 +193,39 @@ public class ArticleFragment extends BaseFragment {
         query.findObjects(new FindListener<Article>() {
             @Override
             public void done(List<Article> list, BmobException e) {
-                if(e == null){
-                    if(list.size()>0){
-                        if(type == PULL_REFRESH){
+                if (e == null) {
+                    if (list.size() > 0) {
+                        if (type == PULL_REFRESH) {
                             articles.clear();
                         }
 
                         articles.addAll(list);
                         articleAdapter.notifyDataSetChanged();
 //                        获得最后一个item的创建时间
-                        lastTime = list.get(articles.size()-1).getCreatedAt();
-                    }else{
-                        if(type == LOAD_MORE){
+                        lastTime = articles.get(articles.size() - 1).getCreatedAt();
+                        if (type == LOAD_MORE) {
+                            swipeRefreshLayout.finishLoadmore();
+                        } else {
+                            swipeRefreshLayout.finishRefresh();
+                        }
+                    } else {
+                        if (type == LOAD_MORE) {
                             showToast("没有更多数据了");
-                        }else{
+                            swipeRefreshLayout.finishLoadmore();
+                        } else {
                             showToast("服务器没有数据");
+                            swipeRefreshLayout.finishRefresh();
                         }
                     }
-                    swipeRefreshLayout.setRefreshing(false);
-                }else {
-                    showToast("请求服务器异常"+e.getMessage()+e.getErrorCode());
-                    swipeRefreshLayout.setRefreshing(false);
+
+                } else {
+                    showToast("请求服务器异常" + e.getMessage() + e.getErrorCode());
+                    Log.e("测试",e.getMessage()+"==>"+e.getErrorCode());
+                    if(type==PULL_REFRESH){
+                        swipeRefreshLayout.finishRefresh();
+                    }else{
+                        swipeRefreshLayout.finishLoadmore();
+                    }
                 }
             }
         });

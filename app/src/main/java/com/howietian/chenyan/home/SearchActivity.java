@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.howietian.chenyan.BaseActivity;
@@ -68,7 +69,7 @@ public class SearchActivity extends BaseActivity {
 
             if (isActivity && isArticle) {
                 changeDatas();
-                showToast(titles.toString());
+
             }
 
 
@@ -142,8 +143,12 @@ public class SearchActivity extends BaseActivity {
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 mSearchView.setQuery(titles.get(position), true);
 //                showToast(searchList.get(position).get(0));
+
+
+
                 if (searchList.get(position).get(2).equals(MACTIVITY)) {
                     Intent intent = new Intent(SearchActivity.this, ActivityDetailActivity.class);
+
                     intent.putExtra(Constant.FROM_ACTIVIRY, searchList.get(position).get(0));
                     jumpTo(intent, false);
                 } else {

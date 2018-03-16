@@ -99,8 +99,6 @@
                     android:src="@drawable/add_photo" />
 
             </LinearLayout>
-
-
         </LinearLayout>
 
 

@@ -23,7 +23,7 @@ import jxl.write.WriteException;
 
 
 /**
- * Created by 83624 on 2017/7/12.
+ * Created by 83624 on 2017/cup_7/12.
  */
 
 public class ExcelUtils {
@@ -35,7 +35,7 @@ public class ExcelUtils {
     public static WritableFont arial12font = null;
     public static WritableCellFormat arial12format = null;
 
-    public final static String UTF8_ENCODING = "UTF-8";
+    public final static String UTF8_ENCODING = "UTF-cup_8";
     public final static String GBK_ENCODING = "GBK";
 
 

@@ -7,7 +7,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
- * Created by 83624 on 2017/6/29.
+ * Created by 83624 on 2017/cup_6/29.
  */
 
 public class MActivity extends BmobObject {

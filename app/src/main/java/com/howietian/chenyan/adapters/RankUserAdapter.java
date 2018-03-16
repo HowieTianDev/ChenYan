@@ -18,28 +18,31 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by HowieTian on 2017/8/2 0002.
+ * Created by HowieTian on 2017/cup_8/2 0002.
  */
 
-public class RankUserAdapter extends RecyclerView.Adapter<RankUserAdapter.RankUserViewHolder>{
+public class RankUserAdapter extends RecyclerView.Adapter<RankUserAdapter.RankUserViewHolder> {
     private Context context;
     private List<User> userList = new ArrayList<>();
     private onItemClickListener mOnItemClickListener;
-    public interface onItemClickListener{
+
+    public interface onItemClickListener {
         void onClick(int position);
     }
 
-    public void setOnItemClickListener(onItemClickListener listener){
+    public void setOnItemClickListener(onItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
-    public RankUserAdapter(Context context,List<User> users){
+
+    public RankUserAdapter(Context context, List<User> users) {
         this.context = context;
         this.userList = users;
     }
+
     @Override
     public RankUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RankUserViewHolder holder;
-        View view = LayoutInflater.from(context).inflate(R.layout.item_rank_user,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_rank_user, parent, false);
         holder = new RankUserViewHolder(view);
         return holder;
     }
@@ -48,7 +51,7 @@ public class RankUserAdapter extends RecyclerView.Adapter<RankUserAdapter.RankUs
     public void onBindViewHolder(RankUserViewHolder holder, final int position) {
         User user = userList.get(position);
         holder.nickName.setText(user.getNickName());
-        switch (position){
+        switch (position) {
             case 0:
                 holder.imageView.setImageResource(R.drawable.cup_1);
                 break;
@@ -58,8 +61,29 @@ public class RankUserAdapter extends RecyclerView.Adapter<RankUserAdapter.RankUs
             case 2:
                 holder.imageView.setImageResource(R.drawable.cup_3);
                 break;
+            case 3:
+                holder.imageView.setImageResource(R.drawable.cup_4);
+                break;
+            case 4:
+                holder.imageView.setImageResource(R.drawable.cup_5);
+                break;
+            case 5:
+                holder.imageView.setImageResource(R.drawable.cup_6);
+                break;
+            case 6:
+                holder.imageView.setImageResource(R.drawable.cup_7);
+                break;
+            case 7:
+                holder.imageView.setImageResource(R.drawable.cup_8);
+                break;
+            case 8:
+                holder.imageView.setImageResource(R.drawable.cup_9);
+                break;
+            case 9:
+                holder.imageView.setImageResource(R.drawable.cup_10);
+                break;
         }
-        if(mOnItemClickListener!=null){
+        if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -70,20 +94,20 @@ public class RankUserAdapter extends RecyclerView.Adapter<RankUserAdapter.RankUs
     }
 
 
-
     @Override
     public int getItemCount() {
         return userList.size();
     }
 
-    static class RankUserViewHolder extends RecyclerView.ViewHolder{
+    static class RankUserViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_image)
         ImageView imageView;
         @Bind(R.id.tv_nickName)
         TextView nickName;
+
         public RankUserViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

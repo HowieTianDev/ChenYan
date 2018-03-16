@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by 83624 on 2017/7/12.
+ * Created by 83624 on 2017/cup_7/12.
  */
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> {

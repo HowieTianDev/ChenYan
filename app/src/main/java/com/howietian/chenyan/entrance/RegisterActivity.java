@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
@@ -93,9 +95,10 @@ public class RegisterActivity extends BaseActivity {
             user.setPassword(pwd);
             user.setUsername(phone);
             user.setMobilePhoneNumber(phone);
+            user.setClub(false);
+            String installId = BmobInstallation.getInstallationId(this);
+            user.setInstallationId(installId);
             verifySmsCode();
-
-
         }
     }
 
@@ -122,6 +125,7 @@ public class RegisterActivity extends BaseActivity {
                                 if (e.getErrorCode() == 202) {
                                     showToast("该手机号已经注册");
                                 }
+                                Log.e("注册", e.getMessage() + e.getErrorCode());
 
                                 progress.dismiss();
                             }

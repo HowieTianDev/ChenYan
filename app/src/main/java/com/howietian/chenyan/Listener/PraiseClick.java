@@ -11,7 +11,7 @@ import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.utils.UIHelper;
 
 /**
- * Created by 83624 on 2017/7/19.
+ * Created by 83624 on 2017/cup_7/19.
  * 这里可能会有点问题，selector可能没设置好
  */
 

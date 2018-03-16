@@ -22,7 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by 83624 on 2017/6/29.
+ * Created by 83624 on 2017/cup_6/29.
  */
 
 public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -58,15 +58,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == NORMAL_TYPE) {
+       // if (viewType == NORMAL_TYPE) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_article, parent, false);
             NormalViewHolder articleViewHolder = new NormalViewHolder(view);
             return articleViewHolder;
-        } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.footer_view, parent, false);
-            FootViewHolder footer = new FootViewHolder(view);
-            return footer;
-        }
+//      //  } /*else {
+//            View view = LayoutInflater.from(context).inflate(R.layout.footer_view, parent, false);
+//            FootViewHolder footer = new FootViewHolder(view);
+//            return footer;
+//        }*/
 
     }
 
@@ -82,8 +82,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((NormalViewHolder) holder).title.setText(article.getTitle());
             ((NormalViewHolder) holder).intro.setText(article.getContent());
             ((NormalViewHolder) holder).comment.setText(article.getCommentNum().toString());
-            if(article.getLikeIdList()!=null){
-                ((NormalViewHolder) holder).like.setText(article.getLikeIdList().size()+"");
+            if (article.getLikeIdList() != null) {
+                ((NormalViewHolder) holder).like.setText(article.getLikeIdList().size() + "");
             }
 
 
@@ -96,7 +96,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 });
             }
 
-        } else {
+        } /*else {
             holder.itemView.setVisibility(View.VISIBLE);
             holder.itemView.setPadding(0, 0, 0, 0);
 //            当数据源数目小于一页显示的数目时，不显示footer
@@ -114,28 +114,28 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 }, 1000);
             }
-        }
+        }*/
 
 
     }
-
+//  return articles.size() == 0 ? 0 : articles.size() + 1;
     @Override
     public int getItemCount() {
-        return articles.size() == 0 ? 0 : articles.size() + 1;
+        return articles.size();
     }
     // 根据位置的不同，返回不同的View 类型
 
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
-            return FOOTER_TYPE;
-        } else {
-            return NORMAL_TYPE;
-        }
-    }
+//    @Override
+//    public int getItemViewType(int position) {
+//        if (position == getItemCount() - 1) {
+//            return FOOTER_TYPE;
+//        } else {
+//            return NORMAL_TYPE;
+//        }
+//    }
 
-    public class NormalViewHolder extends RecyclerView.ViewHolder {
+     static class NormalViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.image)
         ImageView image;
         @Bind(R.id.title)
@@ -154,7 +154,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    //    底部footerView的 viewholder
+    // 底部footerView的 viewholder
     class FootViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.footer_bar)
         ProgressBar footerBar;

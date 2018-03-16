@@ -265,15 +265,17 @@ public class CircleFragment extends BaseFragment {
                     if (dynamic.getLikeId() != null) {
                         likeIdList = dynamic.getLikeId();
                     }
+
                     likeIdList.add(currentUser.getObjectId());
                     dynamic.setLikeId(likeIdList);
+                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                     dynamic.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                                Log.e("动态", "点赞更新成功");
                             } else {
-                                showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
+                                Log.e("动态", "点赞更新失败");
                             }
                         }
                     });
@@ -297,11 +299,12 @@ public class CircleFragment extends BaseFragment {
                     likeIdList.remove(currentUser.getObjectId());
 
                     dynamic.setLikeId(likeIdList);
+                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                     dynamic.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                                Log.e("动态", "取消点赞更新成功");
                             } else {
                                 showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
@@ -322,15 +325,15 @@ public class CircleFragment extends BaseFragment {
         dynamicAdapter.setOnAvatarClickListener(new DynamicAdapter.onAvatarClickListener() {
             @Override
             public void onClick(int position) {
-                if(MyApp.isLogin()){
+                if (MyApp.isLogin()) {
                     Dynamic dynamic = dynamicList.get(position);
                     User dynamicAuthor = dynamic.getUser();
                     String userMsg = new Gson().toJson(dynamicAuthor, User.class);
                     Intent intent = new Intent(getContext(), PersonPageActivity.class);
                     intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
-                    jumpTo(intent,false);
-                }else{
-                    jumpTo(LoginActivity.class,false);
+                    jumpTo(intent, false);
+                } else {
+                    jumpTo(LoginActivity.class, false);
                 }
 
             }
@@ -425,12 +428,13 @@ public class CircleFragment extends BaseFragment {
                         dynamicAdapter.notifyDataSetChanged();
                         lastTime = dynamicList.get(dynamicList.size() - 1).getCreatedAt();
                         Log.e("HHH", lastTime);
-//                        查询到无数据
+//
                         if (type == PULL_REFRESH) {
                             swipeRefreshLayout.finishRefresh();
                         } else {
                             swipeRefreshLayout.finishLoadmore();
                         }
+                        //查询到无数据
                     } else {
                         if (type == LOAD_MORE) {
                             showToast("没有更多数据了");
@@ -442,8 +446,11 @@ public class CircleFragment extends BaseFragment {
                     }
                 } else {
                     showToast("请求服务器异常" + e.getMessage() + "错误代码" + e.getErrorCode());
-                    Log.e("HHH", e.getMessage() + "错误代码" + e.getErrorCode());
-                    swipeRefreshLayout.finishRefresh();
+                    if (type == PULL_REFRESH) {
+                        swipeRefreshLayout.finishRefresh();
+                    } else {
+                        swipeRefreshLayout.finishLoadmore();
+                    }
                 }
 
             }

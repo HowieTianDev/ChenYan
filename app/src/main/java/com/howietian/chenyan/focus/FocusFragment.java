@@ -229,11 +229,12 @@ public class FocusFragment extends BaseFragment {
                     }
                     likeIdList.add(currentUser.getObjectId());
                     dynamic.setLikeId(likeIdList);
+                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                     dynamic.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                               Log.e("聚焦","点赞更新成功！");
                             } else {
                                 showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
@@ -259,11 +260,12 @@ public class FocusFragment extends BaseFragment {
                     likeIdList.remove(currentUser.getObjectId());
 
                     dynamic.setLikeId(likeIdList);
+                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                     dynamic.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                               Log.e("聚焦","取消点赞更新成功！");
                             } else {
                                 showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
@@ -413,6 +415,9 @@ public class FocusFragment extends BaseFragment {
 
                             }
                         });
+                    }else{
+                        swipeRefreshLayout.finishRefresh();
+                        showToast("你还没有关注的人哦~");
                     }
                 }
             }

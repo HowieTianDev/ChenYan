@@ -164,6 +164,29 @@
                             android:text="粉丝"
                             android:textSize="@dimen/bodySmall" />
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/tv_join"
+                            android:layout_width="50dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@drawable/sign_border"
+                            android:gravity="center"
+                            android:layout_marginEnd="16dp"
+                            android:padding="3dp"
+                            android:text="加入"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/caption"
+
+                            />
+                    </LinearLayout>
+
                 </LinearLayout>
 
 

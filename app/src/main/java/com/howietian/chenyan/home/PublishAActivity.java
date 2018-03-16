@@ -73,10 +73,6 @@ public class PublishAActivity extends BaseActivity {
     private Uri cropFileUri;//临时的裁剪后的照片Uri
     private String deadline;
     final User user = BmobUser.getCurrentUser(User.class);
-
-
-
-
     BmobFile bf;
 
 
@@ -165,8 +161,8 @@ public class PublishAActivity extends BaseActivity {
         if(TextUtils.isEmpty(title)){
             etTitle.setError("标题不能为空");
             return;
-        }else if(deadline == null){
-            tvShowTime.setError("请选择时间");
+        }else if(TextUtils.isEmpty(deadline)){
+            showToast("请选择截至时间");
             return;
         }else if(TextUtils.isEmpty(content)){
             etContent.setError("内容不能为空");
@@ -198,6 +194,7 @@ public class PublishAActivity extends BaseActivity {
             public void done(String s, BmobException e) {
                 if(e == null){
                     showToast("提交成功");
+                    finish();
                 }else{
                     showToast("提交失败"+e.getMessage()+e.getErrorCode());
                 }
@@ -319,10 +316,13 @@ public class PublishAActivity extends BaseActivity {
         switch (requestCode) {
 //            从图库中选取图片，会返回图片的Uri
             case GALLERY_REQUEST:
-                if (data.getData() != null) {
-                    Uri uri = data.getData();
-                    cropImage(uri);
+                if(data!=null){
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        cropImage(uri);
+                    }
                 }
+
                 break;
 //            使用相机拍照，不会返回图片的Uri
             case CAMERA_REQUEST:

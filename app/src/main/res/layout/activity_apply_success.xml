@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.howietian.chenyan.me.club.ApplySuccessActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_apply_success"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:layout_scrollFlags="enterAlways|scroll"
+        app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+        app:theme="@style/ToolbarTheme"
+        app:title="申请成功"
+        app:titleTextColor="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tb_apply_success"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="恭喜您申请成功！您的社团ID是："
+            android:textColor="@color/dark"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_club_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="123456"
+            android:textColor="@color/colorPrimary"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+</RelativeLayout>

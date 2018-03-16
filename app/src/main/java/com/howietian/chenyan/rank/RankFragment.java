@@ -19,6 +19,9 @@ import com.howietian.chenyan.BaseFragment;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.adapters.RankAdapter;
 import com.howietian.chenyan.entities.Rank;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +43,7 @@ public class RankFragment extends BaseFragment {
     @Bind(R.id.rv_rank)
     RecyclerView recyclerView;
     @Bind(R.id.swipeLayout_rank)
-    SwipeRefreshLayout swipeRefreshLayout;
+    SmartRefreshLayout swipeRefreshLayout;
 
     private RankAdapter adapter;
     private RecyclerView.LayoutManager manager;
@@ -78,18 +81,16 @@ public class RankFragment extends BaseFragment {
     }
 
     private void initViews() {
-
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         adapter = new RankAdapter(getContext(), rankList);
         manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-
     }
 
     private void initDates() {
-        swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.autoRefresh();
         queryRankList();
 
     }
@@ -104,7 +105,8 @@ public class RankFragment extends BaseFragment {
                 String rankMsg = gson.toJson(rank, Rank.class);
                 Intent intent = new Intent(getContext(), RankDetailActivity.class);
                 intent.putExtra(FROM_RANK_FRAGMENT, rankMsg);
-               jumpTo(intent, false);
+                Log.e("排行", rankMsg);
+                jumpTo(intent, false);
             }
         });
 
@@ -113,7 +115,7 @@ public class RankFragment extends BaseFragment {
 
     private void queryRankList() {
         BmobQuery<Rank> rankQuery = new BmobQuery<>();
-        rankQuery.include("no1,no2,no3,no4,no5,no6,no7,no8,no9,no10");
+        rankQuery.include("one,two,three,four,five,six,seven,eight,nine,ten");
         rankQuery.order("order");
         rankQuery.findObjects(new FindListener<Rank>() {
             @Override
@@ -125,19 +127,20 @@ public class RankFragment extends BaseFragment {
                     rankList.addAll(list);
                     adapter.notifyDataSetChanged();
                     showToast("查询成功！");
-                    swipeRefreshLayout.setRefreshing(false);
+                    Log.e("排行", rankList.toString());
+                    swipeRefreshLayout.finishRefresh();
                 } else {
                     showToast("查询失败！" + e.getErrorCode() + e.getMessage());
-                    swipeRefreshLayout.setRefreshing(false);
+                    swipeRefreshLayout.finishRefresh();
                 }
             }
         });
     }
 
     private void refresh() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(RefreshLayout refreshlayout) {
                 queryRankList();
             }
         });

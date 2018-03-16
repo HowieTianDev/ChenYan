@@ -1,7 +1,7 @@
 package com.howietian.chenyan.app;
 
 /**
- * Created by 83624 on 2017/6/30.
+ * Created by 83624 on 2017/cup_6/30.
  */
 
 public class Constant {

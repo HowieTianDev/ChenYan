@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 83624 on 2017/7/19.
+ * Created by 83624 on 2017/cup_7/19.
  */
 
 public class PraiseWidget extends android.support.v7.widget.AppCompatTextView {

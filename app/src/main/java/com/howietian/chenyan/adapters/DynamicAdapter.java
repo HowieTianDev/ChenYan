@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by 83624 on 2017/7/20.
+ * Created by 83624 on 2017/cup_7/20.
  */
 
 public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewHolder> {
@@ -121,6 +122,16 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
         }
         if (payloads.isEmpty()) {
             holder.nick.setText(dynamic.getUser().getNickName());
+            if(dynamic.getUser().getClub()!=null){
+                if (dynamic.getUser().getClub()) {
+                    holder.ivClub.setVisibility(View.VISIBLE);
+                } else {
+                    holder.ivClub.setVisibility(View.INVISIBLE);
+                }
+            }else{
+                holder.ivClub.setVisibility(View.INVISIBLE);
+            }
+
             if (dynamic.getUser().getAvatar() != null) {
                 Glide.with(context).load(dynamic.getUser().getAvatar().getUrl()).into(holder.avatar);
             } else {
@@ -155,19 +166,16 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
              */
             if (MyApp.isLogin()) {
                 if (dynamic.getLikeId() != null) {
-                    for (String id : dynamic.getLikeId()) {
-                        if (id.equals(BmobUser.getCurrentUser(User.class).getObjectId())) {
-                            holder.like.setLiked(true);
-                        } else {
-                            holder.like.setLiked(false);
-                        }
+                    if (dynamic.getLikeId().contains(BmobUser.getCurrentUser().getObjectId())) {
+                        holder.like.setLiked(true);
+                    } else {
+                        holder.like.setLiked(false);
                     }
+                } else {
+                    holder.like.setLiked(false);
                 }
             }
 
-            if (dynamic.getLikeId() == null) {
-                holder.like.setLiked(false);
-            }
         } else {
             int type = (int) payloads.get(0);
             switch (type) {
@@ -251,6 +259,8 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
         TextView tvLikeNum;
         @Bind(R.id.nineGridView)
         NineGridView nineGridView;
+        @Bind(R.id.iv_club)
+        ImageView ivClub;
 
         public DMyViewHolder(View itemView) {
             super(itemView);

@@ -3,7 +3,7 @@ package com.howietian.chenyan.views;
 import android.text.SpannableStringBuilder;
 
 /**
- * Created by 83624 on 2017/7/20.
+ * Created by 83624 on 2017/cup_7/20.
  */
 
 public class SpannableStringBuilderCompat extends SpannableStringBuilder {

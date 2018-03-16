@@ -27,6 +27,16 @@
             android:gravity="center"
             android:text="请登录"
             android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/iv_club"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/v_white"
+            android:visibility="invisible" />
     </FrameLayout>
 
     <View
@@ -54,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="7"
+                android:text="0"
                 android:textColor="@color/dark"
                 android:textSize="@dimen/bodyLarge" />
 
@@ -80,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="10"
+                android:text="0"
                 android:textColor="@color/dark"
                 android:textSize="@dimen/bodyLarge" />
 
@@ -106,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="12"
+                android:text="0"
                 android:textColor="@color/dark"
                 android:textSize="@dimen/bodyLarge" />
 
@@ -193,13 +203,29 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/tv_my_notify"
-                style="@style/ItemExample"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/ic_notifications_black_24dp"
-                android:text="我的通知" />
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_my_notify"
+                    style="@style/ItemExample"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/ic_notifications_black_24dp"
+                    android:text="我的通知" />
+
+                <ImageView
+                    android:id="@+id/iv_msg_read"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginRight="80dp"
+                    android:src="@drawable/point" />
+            </FrameLayout>
+
+
         </LinearLayout>
 
         <View

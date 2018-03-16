@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 83624 on 2017/7/18.
+ * Created by 83624 on 2017/cup_7/18.
  */
 
 public class GridViewAdapter extends BaseAdapter {

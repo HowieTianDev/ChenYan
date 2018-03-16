@@ -168,11 +168,12 @@ public class MyDynnamicActivity extends BaseActivity {
                     }
                     likeIdList.add(currentUser.getObjectId());
                     dynamic.setLikeId(likeIdList);
+                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                     dynamic.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                               Log.e("动态","点赞成功！");
                             } else {
                                 showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
@@ -198,11 +199,12 @@ public class MyDynnamicActivity extends BaseActivity {
                     likeIdList.remove(currentUser.getObjectId());
 
                     dynamic.setLikeId(likeIdList);
+                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
                     dynamic.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                                Log.e("动态","取消点赞成功！");
                             } else {
                                 showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }

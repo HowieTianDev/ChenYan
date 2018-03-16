@@ -9,7 +9,7 @@ import com.howietian.chenyan.R;
 
 
 /**
- * Created by Howie Tian on 2017/7/27 0027.
+ * Created by Howie Tian on 2017/cup_7/27 0027.
  * 简单封装一下Glide
  */
 

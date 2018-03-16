@@ -158,11 +158,11 @@ public class PubDynamicActivity extends BaseActivity {
                             @Override
                             public void done(String s, BmobException e) {
                                 if (e == null) {
-                                    showToast("发布成功");
+                                    showToast("上传成功！");
                                     updateUserDynamicNum();
                                     progress.dismiss();
                                 } else {
-                                    showToast("发布失败" + e.getMessage() + e.getErrorCode());
+                                    showToast("上传失败！" + e.getMessage() + e.getErrorCode());
                                     progress.dismiss();
                                 }
                             }
@@ -199,6 +199,7 @@ public class PubDynamicActivity extends BaseActivity {
 
     }
 
+    // 更新用户动态数目，并直接关掉发布页面
     private void updateUserDynamicNum() {
         int num = user.getDynamicNum();
         num++;
@@ -207,7 +208,7 @@ public class PubDynamicActivity extends BaseActivity {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    showToast("OK");
+                    finish();
                 } else {
                     showToast("动态数目更新失败");
                 }

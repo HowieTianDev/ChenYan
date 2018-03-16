@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,9 +18,11 @@ import com.howietian.chenyan.R;
 import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.entrance.LoginActivity;
+import com.howietian.chenyan.me.club.MyClubActivity;
 import com.howietian.chenyan.me.collect.MyCollectActivity;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -55,6 +58,10 @@ public class MeFragment extends BaseFragment {
     LinearLayout llFollow;
     @Bind(R.id.ll_publish)
     LinearLayout llPublish;
+    @Bind(R.id.iv_club)
+    ImageView ivClub;
+    @Bind(R.id.iv_msg_read)
+    ImageView ivMsgRead;
 
     private static final String ME_FRAGMENT = "me_fragment";
 
@@ -86,6 +93,7 @@ public class MeFragment extends BaseFragment {
 
     //  初始化数据
     private void initDatas() {
+
         User user = BmobUser.getCurrentUser(User.class);
         if (MyApp.isLogin()) {
             if (user.getAvatar() != null) {
@@ -101,7 +109,22 @@ public class MeFragment extends BaseFragment {
             } else {
                 tvFollow.setText(0 + "");
             }
+            if (user.getClub() != null) {
+                if (user.getClub()) {
+                    ivClub.setVisibility(View.VISIBLE);
+                } else {
+                    ivClub.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                ivClub.setVisibility(View.INVISIBLE);
+            }
+
             queryFanNum(user);
+            if (MyApp.userList.size() > 0) {
+                ivMsgRead.setVisibility(View.VISIBLE);
+            } else {
+                ivMsgRead.setVisibility(View.GONE);
+            }
         } else {
 
             avatar.setImageResource(R.drawable.ic_account_circle_blue_grey_100_36dp);
@@ -203,16 +226,26 @@ public class MeFragment extends BaseFragment {
             jumpTo(LoginActivity.class, false);
         }
     }
+
     /**
      * 我的通知，暂未实现
      */
     @OnClick(R.id.tv_my_notify)
-    public void toMyNotify(){
-        showToast("敬请期待~");
+    public void toMyNotify() {
+        if (MyApp.isLogin()) {
+            jumpTo(MyMsgActivity.class, false);
+        } else {
+            jumpTo(LoginActivity.class, false);
+        }
     }
+
     @OnClick(R.id.tv_my_club)
-    public void toMyClub(){
-        showToast("敬请期待~");
+    public void toMyClub() {
+        if (MyApp.isLogin()) {
+            jumpTo(MyClubActivity.class, false);
+        } else {
+            jumpTo(LoginActivity.class, false);
+        }
     }
 
 
@@ -225,6 +258,8 @@ public class MeFragment extends BaseFragment {
             BmobUser.logOut();
             initDatas();
             showToast("已成功退出");
+            ivClub.setVisibility(View.GONE);
+            ivMsgRead.setVisibility(View.GONE);
         } else {
             return;
         }
@@ -267,4 +302,17 @@ public class MeFragment extends BaseFragment {
     }
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

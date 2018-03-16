@@ -2,10 +2,8 @@ package com.howietian.chenyan.me;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,11 +26,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.howietian.chenyan.BaseActivity;
-import com.howietian.chenyan.MainActivity;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.entities.User;
 
@@ -48,7 +46,6 @@ import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.http.bean.Api;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -78,6 +75,14 @@ public class MyInfoActivity extends BaseActivity {
     EditText etRealName;
     @Bind(R.id.et_phone)
     EditText etPhone;
+    @Bind(R.id.et_club_intro)
+    EditText etClubIntro;
+    @Bind(R.id.ll_club_intro)
+    LinearLayout llClubIntro;
+    @Bind(R.id.ll_club_id)
+    LinearLayout llClubId;
+    @Bind(R.id.tv_club_id)
+    TextView tvClubId;
 
 
     private AlertDialog photoDialog;
@@ -146,6 +151,22 @@ public class MyInfoActivity extends BaseActivity {
         tvBirthday.setText(user.getBirthday());
         etPhone.setText(user.getMobilePhoneNumber());
         etRealName.setText(user.getRealName());
+        if (user.getClub()!=null){
+            if (user.getClub()) {
+                llClubIntro.setVisibility(View.VISIBLE);
+                etClubIntro.setText(user.getClubProfile());
+                llClubId.setVisibility(View.VISIBLE);
+                tvClubId.setText(user.getClubId());
+
+            } else {
+                llClubIntro.setVisibility(View.GONE);
+                llClubId.setVisibility(View.GONE);
+            }
+        }else {
+            llClubIntro.setVisibility(View.GONE);
+            llClubId.setVisibility(View.GONE);
+        }
+
 
     }
 
@@ -172,13 +193,13 @@ public class MyInfoActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save,menu);
+        getMenuInflater().inflate(R.menu.menu_save, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_save:
                 saveInfo();
                 break;
@@ -186,7 +207,7 @@ public class MyInfoActivity extends BaseActivity {
         return true;
     }
 
-//   保存信息
+    //   保存信息
     private void saveInfo() {
 
         nickName = etNick.getText().toString();
@@ -202,12 +223,18 @@ public class MyInfoActivity extends BaseActivity {
         birthday = tvBirthday.getText().toString();
         realName = etRealName.getText().toString();
         phone = etPhone.getText().toString();
+        String clubIntro = etClubIntro.getText().toString();
 
         if (TextUtils.isEmpty(nickName)) {
             showToast("昵称不能为空");
             return;
         } else if (!isStringFormatCorrect(nickName)) {
             showToast("昵称只能为数字、字母、下划线、中文");
+            return;
+        }
+
+        if (!isPhoneNum(phone)) {
+            showToast("手机号码不合法");
             return;
         }
 
@@ -222,12 +249,15 @@ public class MyInfoActivity extends BaseActivity {
         user.setBirthday(birthday);
         user.setRealName(realName);
         user.setMobilePhoneNumber(phone);
+        user.setClubProfile(clubIntro);
+
 
         user.update(BmobUser.getCurrentUser(User.class).getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
                     showToast("保存成功！");
+                    finish();
                 } else {
                     showToast("保存失败" + e.getMessage() + e.getErrorCode());
                 }
@@ -349,7 +379,6 @@ public class MyInfoActivity extends BaseActivity {
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
     }
 
     private void toCamera() {
@@ -380,10 +409,13 @@ public class MyInfoActivity extends BaseActivity {
         switch (requestCode) {
 //            从图库中选取图片，会返回图片的Uri
             case GALLERY_REQUEST:
-                if (data.getData() != null) {
-                    Uri uri = data.getData();
-                    cropImage(uri);
+                if (data != null) {
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        cropImage(uri);
+                    }
                 }
+
                 break;
 //            使用相机拍照，不会返回图片的Uri
             case CAMERA_REQUEST:
@@ -400,8 +432,6 @@ public class MyInfoActivity extends BaseActivity {
             case CROP_REQUEST:
 
                 if (resultCode == RESULT_OK) {
-
-
                     /**
                      * 将图片上传服务器
                      */
@@ -454,7 +484,7 @@ public class MyInfoActivity extends BaseActivity {
 
     private void upLoadAvatar() {
         File file = new File(cropFileUri.getPath());
-        Log.e("PHOTO",file.getPath());
+        Log.e("PHOTO", file.getPath());
         bf = new BmobFile(file);
         bf.uploadblock(new UploadFileListener() {
             @Override
@@ -506,5 +536,12 @@ public class MyInfoActivity extends BaseActivity {
         return format.format(date);
     }
 
+    //利用正则表达式判断手机号码的合法性,已经改好
+    private boolean isPhoneNum(String str) {
+        String regExp = "^((13[0-9])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
+        Pattern p = Pattern.compile(regExp);
+        Matcher m = p.matcher(str);
+        return m.find();
+    }
 
 }

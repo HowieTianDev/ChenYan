@@ -132,33 +132,71 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/bodyNormal" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           >
+
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="40dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="评论（"
+                    android:textSize="@dimen/bodyLarge" />
 
                 <TextView
                     android:id="@+id/tv_comment_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="40dp"
-                    android:text="评论(38)"
+                    android:text="0"
+                    android:textSize="@dimen/bodyLarge"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="）"
+                    android:textSize="@dimen/bodyLarge" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="40dp"
+                android:gravity="end">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="赞（"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/bodyLarge" />
 
                 <TextView
                     android:id="@+id/tv_like_num"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="40dp"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="赞（0）"
+                    android:text="0"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/bodyLarge"
 
                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="）"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/bodyLarge" />
             </LinearLayout>
+        </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_activity_comment"

@@ -70,6 +70,8 @@ public class MyFocusActivity extends BaseActivity {
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
+        // 设置recyclerview 不自动滚动
+
 
     }
 

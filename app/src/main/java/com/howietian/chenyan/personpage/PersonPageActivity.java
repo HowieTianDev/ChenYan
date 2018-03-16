@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,12 +22,15 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.PushListener;
 import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,6 +54,8 @@ public class PersonPageActivity extends BaseActivity {
     Toolbar toolbar;
     @Bind(R.id.tv_focus)
     TextView tvFocus;
+    @Bind(R.id.tv_join)
+    TextView tvJoin;
 
     private User dynamicAuthor;
     private User user = BmobUser.getCurrentUser(User.class);
@@ -59,6 +65,8 @@ public class PersonPageActivity extends BaseActivity {
     private ArrayList<String> focusId = new ArrayList<>();
     //    判断关注的标志
     private boolean isFocus = false;
+    //    判断加入的标志
+    private boolean isJoin = false;
 
 
     @Override
@@ -132,8 +140,16 @@ public class PersonPageActivity extends BaseActivity {
 //        自己查看自己的主页，不显示关注
         if (dynamicAuthor.getObjectId().equals(user.getObjectId())) {
             tvFocus.setVisibility(View.GONE);
+            tvJoin.setVisibility(View.GONE);
         } else {
             tvFocus.setVisibility(View.VISIBLE);
+            if (dynamicAuthor.getClub()) {
+                tvJoin.setVisibility(View.VISIBLE);
+            } else {
+                tvJoin.setVisibility(View.GONE);
+            }
+
+
             if (user.getFocusIds() != null) {
                 for (String focusId : user.getFocusIds()) {
                     if (focusId.equals(dynamicAuthor.getObjectId())) {
@@ -145,6 +161,16 @@ public class PersonPageActivity extends BaseActivity {
             } else {
                 tvFocus.setText("关注");
                 isFocus = false;
+            }
+
+            if (dynamicAuthor.getMemberIds() != null) {
+                if (dynamicAuthor.getMemberIds().contains(user.getObjectId())) {
+                    isJoin = true;
+                    tvJoin.setText("已加入");
+                }
+            } else {
+                tvJoin.setText("加入");
+                isJoin = false;
             }
 
         }
@@ -182,6 +208,32 @@ public class PersonPageActivity extends BaseActivity {
         }
     }
 
+    // 加入社团
+    @OnClick(R.id.tv_join)
+    public void join() {
+        if (!isJoin) {
+            showToast("请等待审核通过！");
+            BmobPushManager bmobPushManager = new BmobPushManager();
+
+            BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+            String minstallationId = dynamicAuthor.getInstallationId();
+            query.addWhereEqualTo("installationId", minstallationId);
+            bmobPushManager.setQuery(query);
+            Log.d("bmob发送", new Gson().toJson(user, User.class));
+            bmobPushManager.pushMessage(new Gson().toJson(user, User.class), new PushListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e == null) {
+                        showToast("发送成功！");
+                    } else {
+                        showToast("发送失败！");
+                    }
+                }
+            });
+        }
+
+    }
+
     //设置关注的方法
     private void toFocus() {
 
@@ -194,16 +246,17 @@ public class PersonPageActivity extends BaseActivity {
         user.setFocus(relation);
         focusId.add(dynamicAuthor.getObjectId());
         user.setFocusIds(focusId);
+        tvFocus.setText("已关注");
+        isFocus = true;
+        String nums = tvFan.getText().toString();
+        Integer num = Integer.valueOf(nums);
+        Integer numshow = num + 1;
+        tvFan.setText(numshow.toString());
         user.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    tvFocus.setText("已关注");
-                    isFocus = true;
-                    String nums = tvFan.getText().toString();
-                    Integer num = Integer.valueOf(nums);
-                    Integer numshow = num + 1;
-                    tvFan.setText(numshow.toString());
+                    Log.e("个人主页", "关注成功！");
                 } else {
                     showToast("关注失败" + e.getMessage() + e.getErrorCode());
                 }
@@ -223,16 +276,17 @@ public class PersonPageActivity extends BaseActivity {
         }
         focusId.remove(dynamicAuthor.getObjectId());
         user.setFocusIds(focusId);
+        tvFocus.setText("关注");
+        String nums = tvFan.getText().toString();
+        Integer num = Integer.valueOf(nums);
+        Integer numshow = num - 1;
+        tvFan.setText(numshow.toString());
+        isFocus = false;
         user.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    tvFocus.setText("关注");
-                    String nums = tvFan.getText().toString();
-                    Integer num = Integer.valueOf(nums);
-                    Integer numshow = num - 1;
-                    tvFan.setText(numshow.toString());
-                    isFocus = false;
+                    Log.e("关注", "取消关注成功！");
                 } else {
                     showToast("取消关注失败！" + e.getMessage() + e.getErrorCode());
                 }

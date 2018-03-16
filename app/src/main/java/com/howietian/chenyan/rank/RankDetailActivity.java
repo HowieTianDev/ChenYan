@@ -14,8 +14,10 @@ import com.howietian.chenyan.BaseActivity;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.adapters.RankUserAdapter;
 import com.howietian.chenyan.app.Constant;
+import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.Rank;
 import com.howietian.chenyan.entities.User;
+import com.howietian.chenyan.entrance.LoginActivity;
 import com.howietian.chenyan.personpage.PersonPageActivity;
 
 import java.util.ArrayList;
@@ -53,21 +55,24 @@ public class RankDetailActivity extends BaseActivity {
             String rankMsg = intent.getStringExtra(RankFragment.FROM_RANK_FRAGMENT);
 
             Rank rank = new Gson().fromJson(rankMsg,Rank.class);
-            userList.add(rank.getNo1());
-            userList.add(rank.getNo2());
-            userList.add(rank.getNo3());
-            userList.add(rank.getNo4());
-            userList.add(rank.getNo5());
-            userList.add(rank.getNo6());
-            userList.add(rank.getNo7());
-            userList.add(rank.getNo8());
-            userList.add(rank.getNo9());
-            userList.add(rank.getNo10());
+            userList.add(rank.getOne());
+            userList.add(rank.getTwo());
+            userList.add(rank.getThree());
+            userList.add(rank.getFour());
+            userList.add(rank.getFive());
+            userList.add(rank.getSix());
+            userList.add(rank.getSeven());
+            userList.add(rank.getEight());
+            userList.add(rank.getNine());
+            userList.add(rank.getTen());
+            setSupportActionBar(toolbar);
+            toolbar.setTitle(rank.getTitle());
         }
     }
 
     private void initViews(){
-        setSupportActionBar(toolbar);
+
+
         adapter = new RankUserAdapter(this,userList);
         manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -85,11 +90,16 @@ public class RankDetailActivity extends BaseActivity {
         adapter.setOnItemClickListener(new RankUserAdapter.onItemClickListener() {
             @Override
             public void onClick(int position) {
-               User user = userList.get(position);
-                String userMsg = new Gson().toJson(user,User.class);
-                Intent intent = new Intent(RankDetailActivity.this, PersonPageActivity.class);
-                intent.putExtra(Constant.TO_PERSON_PAGE,userMsg);
-                jumpTo(intent,false);
+                if(MyApp.isLogin()){
+                    User user = userList.get(position);
+                    String userMsg = new Gson().toJson(user,User.class);
+                    Intent intent = new Intent(RankDetailActivity.this, PersonPageActivity.class);
+                    intent.putExtra(Constant.TO_PERSON_PAGE,userMsg);
+                    jumpTo(intent,false);
+                }else {
+                    jumpTo(LoginActivity.class,false);
+                }
+
             }
         });
     }

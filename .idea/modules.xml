@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ChenYan.iml" filepath="$PROJECT_DIR$/ChenYan.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chenyan.iml" filepath="$PROJECT_DIR$/chenyan.iml" />
     </modules>
   </component>
 </project>

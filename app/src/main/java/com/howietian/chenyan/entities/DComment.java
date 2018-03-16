@@ -3,7 +3,7 @@ package com.howietian.chenyan.entities;
 import cn.bmob.v3.BmobObject;
 
 /**
- * Created by 83624 on 2017/7/21.
+ * Created by 83624 on 2017/cup_7/21.
  */
 
 public class DComment extends BmobObject {
