@@ -80,6 +80,7 @@ public class ActivityFragment extends BaseFragment {
     @Override
     public void init() {
         super.init();
+
         swipeLayout_activity.autoRefresh();
         manager = new LinearLayoutManager(getContext());
         /**
@@ -117,6 +118,7 @@ public class ActivityFragment extends BaseFragment {
                 MActivity mActivity = mActivities.get(position);
                 Gson gson = new Gson();
                 String msg = gson.toJson(mActivity, MActivity.class);
+                Log.e("activity_fragment",msg);
                 intent.putExtra(FROME_ACTIVITY, msg);
                 startActivityForResult(intent, ACTIVITY_RESULT_CODE);
             }
@@ -243,7 +245,7 @@ public class ActivityFragment extends BaseFragment {
 //                        查询到无数据
                     } else {
                         if (type == LOAD_MORE) {
-                            showToast("没有更多数据了");
+                            showToast(getString(R.string.no_data_activity));
                             swipeLayout_activity.finishLoadmore();
                         } else if (type == PULL_REFRESH) {
                             showToast("服务器没有数据");

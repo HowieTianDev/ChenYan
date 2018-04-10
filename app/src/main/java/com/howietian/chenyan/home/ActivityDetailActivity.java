@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -42,7 +41,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.Bind;
@@ -93,6 +91,14 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
 
 
     private static final String TAG = "ActivityDetailActivity";
+    @Bind(R.id.tv_holder)
+    TextView tvHolder;
+    @Bind(R.id.tv_place)
+    TextView tvPlace;
+    @Bind(R.id.tv_activity_time)
+    TextView tvActivityTime;
+    @Bind(R.id.tv_phone)
+    TextView tvPhone;
 
     //    用来存储喜欢和收藏该帖子的用户的ID，以便更快的初始化
     private ArrayList<String> likeIdList = new ArrayList<>();
@@ -103,7 +109,7 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
     private List<Comment> comments = new ArrayList<>();
     private RecyclerView.LayoutManager manager;
     private MActivity mactivity;
-    private Button btnSend;
+    private ImageView ivSend;
     private EditText etComment;
     private PopupWindow popupWindow;
 
@@ -198,6 +204,18 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         tvUpName.setText(mactivity.getCurrentUser().getNickName());
         tvTitle.setText(mactivity.getTitle());
         tvUpTime.setText(mactivity.getUpTime());
+        if (mactivity.getHolder() != null) {
+            tvHolder.setText(mactivity.getHolder());
+        }
+        if (mactivity.getPlace() != null) {
+            tvPlace.setText(mactivity.getPlace());
+        }
+        if (mactivity.getActivityTime() != null) {
+            tvActivityTime.setText(mactivity.getActivityTime());
+        }
+        if (mactivity.getPhone() != null) {
+            tvPhone.setText(mactivity.getPhone());
+        }
 
         loadImage(mactivity.getPhoto().getUrl(), ivPhoto);
         tvContent.setText(mactivity.getContent());
@@ -652,8 +670,8 @@ public class ActivityDetailActivity extends BaseActivity implements View.OnClick
         View view = LayoutInflater.from(this).inflate(R.layout.comment_view, null);
 
         etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(this);
+        ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(this);
 
         popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 //      弹出动画

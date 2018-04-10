@@ -2,30 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="2dp"
     android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/banner4" />
+        <android.support.v7.widget.CardView
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            app:cardCornerRadius="3dp"
+            app:cardElevation="0dp"
+            android:layout_gravity="center_vertical"
+            app:cardUseCompatPadding="false">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/banner4" />
+        </android.support.v7.widget.CardView>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_weight="6"
             android:orientation="vertical">
 
@@ -36,29 +43,17 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:lines="1"
+                android:lines="2"
                 android:paddingTop="5dp"
                 android:text="辰言2017店庆活动"
                 android:textColor="@color/dark"
                 android:textSize="@dimen/bodyLarge" />
 
-            <TextView
-                android:id="@+id/intro"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
-                android:ellipsize="end"
-                android:lines="2"
-                android:lineSpacingExtra="4dp"
-                android:text="辰言2017店庆活动，兹定于XXX年XXX月XXX日举行"
-                android:textSize="14sp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="5dp"
+                android:paddingTop="10dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical">
 
@@ -91,7 +86,7 @@
                     >
 
                     <TextView
-                        android:id="@+id/like"
+                        android:id="@+id/comment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -101,11 +96,12 @@
                         android:text="0"
                         android:textSize="@dimen/bodySmall" />
 
-                    <ImageView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_thumb_up_grey_400_18dp" />
+                        android:textSize="@dimen/bodySmall"
+                        android:text="评论" />
 
                 </LinearLayout>
 
@@ -113,23 +109,17 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
+                    android:gravity="center_vertical|end"
                     android:layout_marginLeft="10dp"
                     >
                     <TextView
-                        android:id="@+id/comment"
-                        android:layout_width="0dp"
-                        android:layout_weight="1234"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical|end"
-                        android:paddingRight="2dp"
-                        android:text="0"
-                        android:textSize="@dimen/bodySmall" />
-
-                    <ImageView
+                        android:id="@+id/tv_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_message_grey_400_18dp" />
+                        android:layout_gravity="center_vertical|end"
+                        android:textSize="@dimen/bodySmall"
+                        android:text="评论" />
+
 
                 </LinearLayout>
             </LinearLayout>

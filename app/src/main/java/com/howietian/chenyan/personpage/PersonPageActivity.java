@@ -143,11 +143,14 @@ public class PersonPageActivity extends BaseActivity {
             tvJoin.setVisibility(View.GONE);
         } else {
             tvFocus.setVisibility(View.VISIBLE);
-            if (dynamicAuthor.getClub()) {
-                tvJoin.setVisibility(View.VISIBLE);
-            } else {
-                tvJoin.setVisibility(View.GONE);
+            if(dynamicAuthor.getClub()!=null){
+                if (dynamicAuthor.getClub()) {
+                    tvJoin.setVisibility(View.VISIBLE);
+                } else {
+                    tvJoin.setVisibility(View.GONE);
+                }
             }
+
 
 
             if (user.getFocusIds() != null) {
@@ -219,6 +222,7 @@ public class PersonPageActivity extends BaseActivity {
             String minstallationId = dynamicAuthor.getInstallationId();
             query.addWhereEqualTo("installationId", minstallationId);
             bmobPushManager.setQuery(query);
+            Log.e("bmobInstalltionID", minstallationId);
             Log.d("bmob发送", new Gson().toJson(user, User.class));
             bmobPushManager.pushMessage(new Gson().toJson(user, User.class), new PushListener() {
                 @Override

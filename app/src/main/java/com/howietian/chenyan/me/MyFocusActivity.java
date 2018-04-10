@@ -109,7 +109,7 @@ public class MyFocusActivity extends BaseActivity {
                         users.addAll(list);
                         adapter.notifyDataSetChanged();
                     } else {
-                        showToast("服务器没有数据");
+                        showToast(getString(R.string.no_data));
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 } else {

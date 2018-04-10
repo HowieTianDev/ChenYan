@@ -1,15 +1,10 @@
-package com.howietian.chenyan.focus;
-
+package com.howietian.chenyan.circle;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,16 +14,16 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.google.gson.Gson;
-import com.howietian.chenyan.BaseFragment;
+import com.howietian.chenyan.BaseActivity;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.adapters.DynamicAdapter;
 import com.howietian.chenyan.app.Constant;
@@ -52,8 +47,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
-import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
@@ -63,12 +56,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class FocusFragment extends BaseFragment {
-
-
+public class FocusActivity extends BaseActivity {
     @Bind(R.id.recyclerView_focus)
     RecyclerView recyclerView;
     @Bind(R.id.swipeLayout_circle)
@@ -109,33 +97,23 @@ public class FocusFragment extends BaseFragment {
         }
     };
 
-    public FocusFragment() {
-        // Required empty public constructor
-    }
 
     private static final String FOCUS_FRAGMENT = "focus_fragment";
 
-
-    public static FocusFragment newInstance(String args) {
-        FocusFragment fragment = new FocusFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(FOCUS_FRAGMENT, args);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
-
     @Override
-    public View createMyView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_focus, container, false);
+    public void setMyContentView() {
+        setContentView(R.layout.activity_focus);
     }
+
 
     @Override
     public void init() {
         super.init();
 
-            initDatas();
-            initListener();
+
+
+        initDatas();
+        initListener();
 
 
     }
@@ -143,8 +121,8 @@ public class FocusFragment extends BaseFragment {
     private void initDatas() {
         swipeRefreshLayout.autoRefresh();
 
-        dynamicAdapter = new DynamicAdapter(getContext(), dynamicList, commentMap, mhandler);
-        layoutManager = new LinearLayoutManager(getContext());
+        dynamicAdapter = new DynamicAdapter(this, dynamicList, commentMap, mhandler);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(dynamicAdapter);
         recyclerView.setHasFixedSize(true);
@@ -154,7 +132,7 @@ public class FocusFragment extends BaseFragment {
 
     private void initListener() {
 
-
+        back();
         loadMore();
         refresh();
         comment();
@@ -162,20 +140,30 @@ public class FocusFragment extends BaseFragment {
         toPersonPage();
     }
 
+    private void back(){
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
     private void refresh() {
         swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                if(MyApp.isLogin()){
+                if (MyApp.isLogin()) {
                     getData(PULL_REFRESH);
-                }else{
+                } else {
                     showToast("请先登录哦~");
                     mhandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             swipeRefreshLayout.finishRefresh();
                         }
-                    },1000);
+                    }, 1000);
 
                 }
 
@@ -234,7 +222,7 @@ public class FocusFragment extends BaseFragment {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                               Log.e("聚焦","点赞更新成功！");
+                                Log.e("聚焦", "点赞更新成功！");
                             } else {
                                 showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
@@ -265,7 +253,7 @@ public class FocusFragment extends BaseFragment {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                               Log.e("聚焦","取消点赞更新成功！");
+                                Log.e("聚焦", "取消点赞更新成功！");
                             } else {
                                 showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
                             }
@@ -290,7 +278,7 @@ public class FocusFragment extends BaseFragment {
                     Dynamic dynamic = dynamicList.get(position);
                     User dynamicAuthor = dynamic.getUser();
                     String userMsg = new Gson().toJson(dynamicAuthor, User.class);
-                    Intent intent = new Intent(getContext(), PersonPageActivity.class);
+                    Intent intent = new Intent(FocusActivity.this, PersonPageActivity.class);
                     intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
                     jumpTo(intent, false);
                 } else {
@@ -400,7 +388,7 @@ public class FocusFragment extends BaseFragment {
                                         }
                                     } else {
                                         if (type == LOAD_MORE) {
-                                            showToast("没有更多数据了");
+                                            showToast(getString(R.string.no_data_dynamic));
                                             swipeRefreshLayout.finishLoadmore();
                                         } else if (type == PULL_REFRESH) {
                                             showToast("服务器没有数据");
@@ -415,7 +403,7 @@ public class FocusFragment extends BaseFragment {
 
                             }
                         });
-                    }else{
+                    } else {
                         swipeRefreshLayout.finishRefresh();
                         showToast("你还没有关注的人哦~");
                     }
@@ -429,13 +417,13 @@ public class FocusFragment extends BaseFragment {
     // 原创评论的弹出窗口
     private void showPopup(final Dynamic dynamic, final int position) {
 
-        View parent = LayoutInflater.from(getContext()).inflate(R.layout.frament_circle, null);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.comment_view, null);
+        View parent = LayoutInflater.from(this).inflate(R.layout.frament_circle, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.comment_view, null);
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();
@@ -509,14 +497,14 @@ public class FocusFragment extends BaseFragment {
     //    评论回复的弹出窗口
     private void showReplyPopup(final String dynamicId, final int position, final User replyUser) {
 //        不能回复自己发的评论
-        View parent = LayoutInflater.from(getContext()).inflate(R.layout.frament_circle, null);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.comment_view, null);
+        View parent = LayoutInflater.from(this).inflate(R.layout.frament_circle, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.comment_view, null);
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
         etComment.setHint("回复" + replyUser.getNickName() + ":");
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();
@@ -593,11 +581,12 @@ public class FocusFragment extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }, 0);
     }
+
 
 
 }

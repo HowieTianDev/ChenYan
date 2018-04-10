@@ -49,6 +49,8 @@ public class ArticleFragment extends BaseFragment {
     @Bind(R.id.swipeLayout_article)
     SmartRefreshLayout swipeRefreshLayout;
 
+    private static final String ARTICLE_FRAGMENT = "article_fragment";
+
 
     private List<Article> articles = new ArrayList<>();
     private ArticleAdapter articleAdapter;
@@ -68,6 +70,14 @@ public class ArticleFragment extends BaseFragment {
         // Required empty public constructor
     }
 
+    public static ArticleFragment newInstance(String args) {
+        ArticleFragment fragment = new ArticleFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ARTICLE_FRAGMENT, args);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 
     @Override
     public View createMyView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +87,7 @@ public class ArticleFragment extends BaseFragment {
     @Override
     public void init() {
         super.init();
+
 
         swipeRefreshLayout.autoRefresh();
 
@@ -210,7 +221,7 @@ public class ArticleFragment extends BaseFragment {
                         }
                     } else {
                         if (type == LOAD_MORE) {
-                            showToast("没有更多数据了");
+                            showToast(getString(R.string.no_data_article));
                             swipeRefreshLayout.finishLoadmore();
                         } else {
                             showToast("服务器没有数据");
@@ -220,10 +231,10 @@ public class ArticleFragment extends BaseFragment {
 
                 } else {
                     showToast("请求服务器异常" + e.getMessage() + e.getErrorCode());
-                    Log.e("测试",e.getMessage()+"==>"+e.getErrorCode());
-                    if(type==PULL_REFRESH){
+                    Log.e("测试", e.getMessage() + "==>" + e.getErrorCode());
+                    if (type == PULL_REFRESH) {
                         swipeRefreshLayout.finishRefresh();
-                    }else{
+                    } else {
                         swipeRefreshLayout.finishLoadmore();
                     }
                 }

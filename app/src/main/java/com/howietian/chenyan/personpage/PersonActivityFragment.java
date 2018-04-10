@@ -88,7 +88,7 @@ public class PersonActivityFragment extends BaseFragment {
      */
     private void queryPersonActivity() {
         BmobQuery<MActivity> query = new BmobQuery<>();
-        query.addWhereEqualTo("currentUser",currentUser);
+        query.addWhereEqualTo("currentUser", currentUser);
         query.include("currentUser");
         query.order("-createdAt");
 
@@ -101,7 +101,7 @@ public class PersonActivityFragment extends BaseFragment {
                         activities.addAll(list);
                         activityAdapter.notifyDataSetChanged();
                     } else {
-                        showToast("服务器没有数据");
+                        showToast(getString(R.string.no_data_activity));
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 } else {

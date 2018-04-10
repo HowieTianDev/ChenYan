@@ -14,6 +14,8 @@ public class Comment extends BmobObject {
 //    这个可能是文章ID或是活动ID
     private MActivity mActivity;
     private Article article;
+    private MRank mRank;
+    private Competition competition;
     private String content;
     private Integer likeNum;
     private BmobRelation like;
@@ -32,6 +34,22 @@ public class Comment extends BmobObject {
         this.likeNum = likeNum;
         this.like = like;
         this.likeIdList = likeIdList;
+    }
+
+    public MRank getmRank() {
+        return mRank;
+    }
+
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
+
+    public void setmRank(MRank mRank) {
+        this.mRank = mRank;
     }
 
     public User getUser() {

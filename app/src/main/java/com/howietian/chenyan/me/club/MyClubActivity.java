@@ -104,10 +104,10 @@ public class MyClubActivity extends BaseActivity {
             @Override
             public void onClick(int position) {
                 User user = userList.get(position);
-                String userMsg = new Gson().toJson(user,User.class);
-                Intent intent = new Intent(MyClubActivity.this,PersonPageActivity.class);
-                intent.putExtra(Constant.TO_PERSON_PAGE,userMsg);
-                jumpTo(intent,false);
+                String userMsg = new Gson().toJson(user, User.class);
+                Intent intent = new Intent(MyClubActivity.this, PersonPageActivity.class);
+                intent.putExtra(Constant.TO_PERSON_PAGE, userMsg);
+                jumpTo(intent, false);
             }
         });
     }
@@ -189,7 +189,7 @@ public class MyClubActivity extends BaseActivity {
         query.include("members");
         BmobQuery<BmobUser> innerQuery = new BmobQuery<>();
         innerQuery.addWhereEqualTo("objectId", currentUser.getObjectId());
-        query.addWhereMatchesQuery("focus", "_User", innerQuery);
+        query.addWhereMatchesQuery("members", "_User", innerQuery);
 
         query.findObjects(new FindListener<User>() {
             @Override
@@ -202,7 +202,7 @@ public class MyClubActivity extends BaseActivity {
                         userList.addAll(list);
                         adapter.notifyDataSetChanged();
                     } else {
-                        showToast("服务器没有数据");
+                        showToast(getString(R.string.no_data_club));
                     }
                 } else {
                     showToast("访问服务器失败，稍后重试" + e.getMessage() + e.getErrorCode());

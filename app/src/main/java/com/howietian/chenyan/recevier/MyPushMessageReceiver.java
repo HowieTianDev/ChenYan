@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.howietian.chenyan.app.MyApp;
+import com.howietian.chenyan.db.DbUtils;
 import com.howietian.chenyan.entities.User;
 
 import org.json.JSONException;
@@ -31,11 +32,7 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
             try {
                 JSONObject jsonObject = new JSONObject(json);
                 String userMsg = jsonObject.getString("alert");
-                Log.d("bmob接受", userMsg);
-                User user = new Gson().fromJson(userMsg,User.class);
-                Log.d("bmobUser",user.getNickName()+user.getInstallationId());
-                MyApp.userList.add(user);
-
+                DbUtils.insertMsg(context, userMsg);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -21,7 +21,7 @@
         <cn.bingoogolapple.bgabanner.BGABanner
             android:id="@+id/bgaBanner"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
             android:background="@color/grey"
             android:scaleType="fitXY"
             app:banner_indicatorGravity="bottom|center_horizontal"
@@ -34,7 +34,7 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:background="@color/white"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/colorPrimary"

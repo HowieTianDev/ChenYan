@@ -1,6 +1,7 @@
 package com.howietian.chenyan.circle;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -26,19 +27,24 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.howietian.chenyan.BaseFragment;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.adapters.DynamicAdapter;
 import com.howietian.chenyan.app.Constant;
 import com.howietian.chenyan.app.MyApp;
+import com.howietian.chenyan.entities.Banner;
 import com.howietian.chenyan.entities.DComment;
 import com.howietian.chenyan.entities.Dynamic;
 import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.entrance.LoginActivity;
+import com.howietian.chenyan.home.ArticleDetailActivity;
+import com.howietian.chenyan.home.HomeFragment;
 import com.howietian.chenyan.personpage.PersonPageActivity;
 import com.melnykov.fab.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -46,6 +52,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +72,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.howietian.chenyan.home.HomeFragment.FROM_BANNER;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,15 +109,22 @@ public class CircleFragment extends BaseFragment {
     private RecyclerView.LayoutManager layoutManager;
     private int limit = Constant.LIMIT;
     private String lastTime;
+    private ArrayList<String> articleIds = new ArrayList<>();
 
     private static final int PULL_REFRESH = 0;
     private static final int LOAD_MORE = 1;
     public static final String TYPE = "type";
 
 
+    // TODO 存在内存泄漏问题
     private Handler mhandler = new Handler() {
+
+        WeakReference<Activity> activityWeakReference;
+
+
         @Override
         public void handleMessage(Message msg) {
+
 
             if (msg.what == DynamicAdapter.REPLY_COMMENT) {
 
@@ -155,7 +172,21 @@ public class CircleFragment extends BaseFragment {
         swipeRefreshLayout.autoRefresh();
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        bgaBanner.setData(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3, R.drawable.banner4);
+        bgaBanner.setAdapter(new BGABanner.Adapter<ImageView, String>() {
+            @Override
+            public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
+                Glide.with(CircleFragment.this)
+                        .load(model)
+                        .placeholder(R.drawable.banner1)
+                        .error(R.drawable.banner2)
+                        .dontAnimate()
+                        .into(itemView);
+            }
+        });
+
+
+        queryBanner(Banner.Circle);
+
 
         dynamicAdapter = new DynamicAdapter(getContext(), dynamicList, commentMap, mhandler);
         layoutManager = new LinearLayoutManager(getContext());
@@ -165,22 +196,46 @@ public class CircleFragment extends BaseFragment {
 
         recyclerView.setNestedScrollingEnabled(false);
 
+    }
 
+
+    private void queryBanner(int type) {
+        BmobQuery<Banner> query = new BmobQuery<>();
+        query.addWhereEqualTo("type", type);
+        query.findObjects(new FindListener<Banner>() {
+            @Override
+            public void done(List<Banner> list, BmobException e) {
+                if (e == null) {
+                    ArrayList<String> urls = new ArrayList<>();
+                    urls.addAll(list.get(0).getUrls());
+                    Log.e("圈子", list.toString());
+                    if (articleIds != null) {
+                        articleIds.clear();
+                    }
+                    articleIds.addAll(list.get(0).getArticleIds());
+
+                    bgaBanner.setData(urls, null);
+                } else {
+                    showToast(e.getMessage() + e.getErrorCode());
+                }
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     private void initListener() {
-
-
         bgaBanner.setDelegate(new BGABanner.Delegate() {
             @Override
             public void onBannerItemClick(BGABanner banner, View itemView, Object model, int position) {
-                showToast(position + "");
+                if (!articleIds.isEmpty()) {
+                    Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
+                    intent.putExtra(FROM_BANNER, articleIds.get(position));
+                    jumpTo(intent, false);
+                }
             }
         });
 
@@ -257,28 +312,37 @@ public class CircleFragment extends BaseFragment {
             @Override
             public void onLikeClick(final int position) {
                 if (MyApp.isLogin()) {
-                    final User currentUser = BmobUser.getCurrentUser(User.class);
-                    final Dynamic dynamic = dynamicList.get(position);
-                    if (likeIdList != null) {
-                        likeIdList.clear();
-                    }
+                    ArrayList<String> mLikeIdList = new ArrayList<>();
+                    User currentUser = BmobUser.getCurrentUser(User.class);
+                    Dynamic dynamic = dynamicList.get(position);
+
                     if (dynamic.getLikeId() != null) {
-                        likeIdList = dynamic.getLikeId();
+                        mLikeIdList.addAll(dynamic.getLikeId());
                     }
 
-                    likeIdList.add(currentUser.getObjectId());
-                    dynamic.setLikeId(likeIdList);
-                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
-                    dynamic.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                Log.e("动态", "点赞更新成功");
-                            } else {
-                                Log.e("动态", "点赞更新失败");
+                    /**
+                     * 只有不包括的时候再进行更新
+                     */
+                    if (!mLikeIdList.contains(currentUser.getObjectId())) {
+                        mLikeIdList.add(currentUser.getObjectId());
+
+                        dynamic.setLikeId(mLikeIdList);
+                        dynamicList.set(position, dynamic);
+
+
+                        dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                        dynamic.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    Log.e("动态", "点赞更新成功");
+                                } else {
+                                    showToast("点赞更新失败");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     jumpTo(LoginActivity.class, false);
                 }
@@ -287,29 +351,35 @@ public class CircleFragment extends BaseFragment {
             @Override
             public void onUnLikeClick(final int position) {
                 if (MyApp.isLogin()) {
-                    final User currentUser = BmobUser.getCurrentUser(User.class);
-                    final Dynamic dynamic = dynamicList.get(position);
-                    if (likeIdList != null) {
-                        likeIdList.clear();
-                    }
+                    ArrayList<String> mLikeIdList = new ArrayList<>();
+                    User currentUser = BmobUser.getCurrentUser(User.class);
+                    Dynamic dynamic = dynamicList.get(position);
 
-                    if (dynamic.getLikeId() != null) {
-                        likeIdList = dynamic.getLikeId();
+                    if (!dynamic.getLikeId().isEmpty()) {
+                        mLikeIdList.addAll(dynamic.getLikeId());
                     }
-                    likeIdList.remove(currentUser.getObjectId());
+                    /**
+                     * 只有包括的时候才进行删除
+                     */
+                    Log.e("动态", mLikeIdList.toString());
+                    if (mLikeIdList.contains(currentUser.getObjectId())) {
+                        mLikeIdList.remove(currentUser.getObjectId());
 
-                    dynamic.setLikeId(likeIdList);
-                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
-                    dynamic.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                Log.e("动态", "取消点赞更新成功");
-                            } else {
-                                showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
+                        dynamic.setLikeId(mLikeIdList);
+                        dynamicList.set(position, dynamic);
+                        dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                        dynamic.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    Log.e("动态", "取消点赞更新成功");
+                                } else {
+                                    showToast("取消点赞更新失败");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     jumpTo(LoginActivity.class, false);
                 }
@@ -419,7 +489,7 @@ public class CircleFragment extends BaseFragment {
                                     dynamicAdapter.notifyDataSetChanged();
 
                                 } else {
-                                    showToast("查询评论失败" + e.getMessage() + e.getErrorCode());
+                                    showToast("查询评论失败");
                                 }
                             }
                         });
@@ -437,15 +507,16 @@ public class CircleFragment extends BaseFragment {
                         //查询到无数据
                     } else {
                         if (type == LOAD_MORE) {
-                            showToast("没有更多数据了");
+                            showToast(getString(R.string.no_data_dynamic));
                             swipeRefreshLayout.finishLoadmore();
                         } else if (type == PULL_REFRESH) {
-                            showToast("服务器没有数据");
+                            showToast("快来发一条动态吧~");
                             swipeRefreshLayout.finishRefresh();
                         }
                     }
                 } else {
-                    showToast("请求服务器异常" + e.getMessage() + "错误代码" + e.getErrorCode());
+                    showToast("请求服务器异常");
+                    Log.e("circle_fragment", e.getMessage() + "=>" + e.getErrorCode());
                     if (type == PULL_REFRESH) {
                         swipeRefreshLayout.finishRefresh();
                     } else {
@@ -465,8 +536,8 @@ public class CircleFragment extends BaseFragment {
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();
@@ -546,8 +617,8 @@ public class CircleFragment extends BaseFragment {
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
         etComment.setHint("回复" + replyUser.getNickName() + ":");
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();
@@ -619,6 +690,7 @@ public class CircleFragment extends BaseFragment {
         });
     }
 
+
     //    弹出软键盘的方法
     private void popupInputMethodWindow() {
         new Handler().postDelayed(new Runnable() {
@@ -637,35 +709,38 @@ public class CircleFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.cv_complex, R.id.cv_sport, R.id.cv_feeling, R.id.cv_chinese, R.id.cv_match, R.id.cv_star, R.id.cv_art, R.id.cv_animation, R.id.cv_free})
+    @OnClick({R.id.cv_school, R.id.cv_focus, R.id.cv_sport, R.id.cv_challenge, R.id.cv_felling, R.id.cv_match, R.id.cv_happy, R.id.cv_art, R.id.cv_life, R.id.cv_study})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.cv_complex:
-                toChooseType("综合");
+            case R.id.cv_school:
+                toChooseType("学校");
+                break;
+            case R.id.cv_focus:
+                jumpTo(FocusActivity.class, false);
+                break;
+            case R.id.cv_challenge:
+                toChooseType("挑战");
+                break;
+            case R.id.cv_felling:
+                toChooseType("情感");
                 break;
             case R.id.cv_sport:
                 toChooseType("体育");
                 break;
-            case R.id.cv_feeling:
-                toChooseType("情感");
-                break;
-            case R.id.cv_chinese:
-                toChooseType("国学");
-                break;
-            case R.id.cv_match:
-                toChooseType("竞赛");
-                break;
-            case R.id.cv_star:
-                toChooseType("精华");
+            case R.id.cv_happy:
+                toChooseType("娱乐");
                 break;
             case R.id.cv_art:
                 toChooseType("文艺");
                 break;
-            case R.id.cv_animation:
-                toChooseType("动漫");
+            case R.id.cv_life:
+                toChooseType("生活");
                 break;
-            case R.id.cv_free:
-                toChooseType("闲情");
+            case R.id.cv_match:
+                toChooseType("比赛");
+                break;
+            case R.id.cv_study:
+                toChooseType("学习");
                 break;
         }
     }

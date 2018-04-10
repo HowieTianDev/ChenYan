@@ -112,11 +112,104 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/banner1" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="主办方    ："
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+
+                <TextView
+                    android:id="@+id/tv_holder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="辰言"
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="活动地点："
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+
+                <TextView
+                    android:id="@+id/tv_place"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="辰言"
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="活动时间："
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+
+                <TextView
+                    android:id="@+id/tv_activity_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="辰言"
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="联系方式："
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+
+                <TextView
+                    android:id="@+id/tv_phone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="辰言"
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/bodySmall" />
+            </LinearLayout>
+
+
             <TextView
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:lineSpacingExtra="8dp"
                 android:text="活动主题：本次晚会节目投标题材不限，联系生活实际，符合当代学生的精神风貌，有积极向上的精神姿态。\n海选对象：全体在校高一、高二学生。\n活动时间：\n报名截止时间：2016年12月28日\n活动预期时间：2017年01月05日"
                 android:textColor="@color/dark"
@@ -132,71 +225,70 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/bodyNormal" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-           >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="40dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="评论（"
-                    android:textSize="@dimen/bodyLarge" />
-
-                <TextView
-                    android:id="@+id/tv_comment_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="@dimen/bodyLarge"
-
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="）"
-                    android:textSize="@dimen/bodyLarge" />
-            </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="40dp"
-                android:gravity="end">
+                android:layout_height="wrap_content">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="赞（"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/bodyLarge" />
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="40dp">
 
-                <TextView
-                    android:id="@+id/tv_like_num"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="评论（"
+                        android:textSize="@dimen/bodyLarge" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="@dimen/bodyLarge"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="）"
+                        android:textSize="@dimen/bodyLarge" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/bodyLarge"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="40dp"
+                    android:gravity="end">
 
-                    />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="赞（"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/bodyLarge" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="）"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/bodyLarge" />
+                    <TextView
+                        android:id="@+id/tv_like_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/bodyLarge"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="）"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/bodyLarge" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_activity_comment"
@@ -220,7 +312,7 @@
     <LinearLayout
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:gravity="center_vertical">
@@ -229,10 +321,10 @@
             android:id="@+id/tv_comment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:layout_weight="2.5"
             android:background="@drawable/input_bg"
             android:gravity="center_vertical"

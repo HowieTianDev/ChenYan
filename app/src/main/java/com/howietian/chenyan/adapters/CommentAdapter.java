@@ -17,6 +17,7 @@ import com.howietian.chenyan.app.MyApp;
 import com.howietian.chenyan.entities.Comment;
 import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.entrance.LoginActivity;
+import com.howietian.chenyan.utils.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,7 +68,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
 
 
         holder.tvNickName.setText(comment.getUser().getNickName());
-        holder.tvTime.setText(comment.getCreatedAt());
+        holder.tvTime.setText(TimeUtil.getTimeFormatText(TimeUtil.getSimpleDateFormat(comment.getCreatedAt())));
         holder.tvContent.setText(comment.getContent());
         if (comment.getLikeIdList() != null) {
             holder.tvLikeNum.setText(comment.getLikeIdList().size() + "");

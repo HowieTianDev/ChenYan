@@ -21,7 +21,7 @@ public class TypeActivity extends BaseActivity {
     ListView listType;
 
     public static final String TYPE = "type";
-    private String[] types = new String[]{"综合", "体育", "情感", "国学", "竞赛", "文艺", "动漫", "闲情"};
+    private String[] types = new String[]{"学校：你的学校发生了什么...", "挑战：打卡活动", "情感：恋爱、情侣、暗恋、喜欢...", "体育：足球、篮球、跑步、健身...", "娱乐：音乐、影视、游戏、动漫...", "文艺：阅读、摄影...", "生活：萌宠、美食...", "比赛：竞赛、辩论、商赛...","学习：语文、数学、外语..."};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class TypeActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.putExtra(TYPE, types[i]);
+                intent.putExtra(TYPE, types[i].split("：")[0]);
                 setResult(RESULT_OK, intent);
                 finish();
             }

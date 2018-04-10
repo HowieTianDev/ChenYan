@@ -19,6 +19,7 @@ import com.howietian.chenyan.entities.DComment;
 import com.howietian.chenyan.entities.Dynamic;
 import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.entrance.LoginActivity;
+import com.howietian.chenyan.utils.TimeUtil;
 import com.howietian.chenyan.views.ClickShowMoreLayout;
 import com.howietian.chenyan.views.CommentWidget;
 import com.howietian.chenyan.views.PraiseWidget;
@@ -120,6 +121,7 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
         } else {
             holder.commentAndPraiseLayout.setVisibility(View.VISIBLE);
         }
+
         if (payloads.isEmpty()) {
             holder.nick.setText(dynamic.getUser().getNickName());
             if(dynamic.getUser().getClub()!=null){
@@ -138,7 +140,8 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
                 holder.avatar.setImageResource(R.drawable.ic_account_circle_blue_grey_100_36dp);
             }
             holder.content.setText(dynamic.getContent());
-            holder.time.setText(dynamic.getCreatedAt());
+            String time = TimeUtil.getTimeFormatText(TimeUtil.getSimpleDateFormat(dynamic.getCreatedAt()));
+            holder.time.setText(time);
             if (dynamic.getLikeId() != null) {
                 holder.tvLikeNum.setText(dynamic.getLikeId().size() + "");
             } else {
@@ -177,10 +180,11 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DMyViewH
             }
 
         } else {
+            Dynamic dynamic1 = dynamicList.get(position);
             int type = (int) payloads.get(0);
             switch (type) {
                 case REFRESH_PRAISE:
-                    holder.tvLikeNum.setText(dynamic.getLikeId().size() + "");
+                    holder.tvLikeNum.setText(dynamic1.getLikeId().size()+"");
                     break;
                 case REFRESH_COMMENT:
                     addCommentWidget(commentList, holder, position);

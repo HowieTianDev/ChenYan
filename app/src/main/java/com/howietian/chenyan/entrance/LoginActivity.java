@@ -207,24 +207,25 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void done(User user, BmobException e) {
                     if (e == null) {
-                        showToast("登录成功！");
-                        jumpTo(MainActivity.class, true);
-                        progressDialog.dismiss();
+
+                        final String installationId = BmobInstallation.getInstallationId(LoginActivity.this);
+                        user.setInstallationId(installationId);
+                        user.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                showToast("登录成功！");
+                                jumpTo(MainActivity.class, true);
+                                progressDialog.dismiss();
+                            }
+                        });
+
                     } else {
-                        showToast("用户名或密码错误！"+e.getMessage()+e.getErrorCode());
+                        showToast("用户名或密码错误！" + e.getMessage() + e.getErrorCode());
                         progressDialog.dismiss();
                     }
                 }
             });
 
-            String installationId = BmobInstallation.getInstallationId(this);
-            user.setInstallationId(installationId);
-            user.update(new UpdateListener() {
-                @Override
-                public void done(BmobException e) {
-
-                }
-            });
 
         }
     }

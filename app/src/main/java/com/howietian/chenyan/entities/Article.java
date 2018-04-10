@@ -14,9 +14,9 @@ public class Article extends BmobObject{
     private String title;
     private String content;
     private BmobFile photo;
-    private Integer likeNum;
+
     private Integer commentNum;
-    private String upTime;
+
     private String url;
 
     private BmobRelation like;
@@ -25,6 +25,8 @@ public class Article extends BmobObject{
 //    为了更快地初始化详情页，显示是否点赞和收藏
     private ArrayList<String> likeIdList;
     private ArrayList<String> collectIdList;
+
+    private String type;
 
     public Article() {
     }
@@ -53,13 +55,6 @@ public class Article extends BmobObject{
         this.photo = photo;
     }
 
-    public Integer getLikeNum() {
-        return likeNum;
-    }
-
-    public void setLikeNum(Integer likeNum) {
-        this.likeNum = likeNum;
-    }
 
     public Integer getCommentNum() {
         return commentNum;
@@ -69,13 +64,7 @@ public class Article extends BmobObject{
         this.commentNum = commentNum;
     }
 
-    public String getUpTime() {
-        return upTime;
-    }
 
-    public void setUpTime(String upTime) {
-        this.upTime = upTime;
-    }
 
     public String getUrl() {
         return url;
@@ -123,9 +112,6 @@ public class Article extends BmobObject{
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", photo=" + photo +
-                ", likeNum=" + likeNum +
-                ", commentNum=" + commentNum +
-                ", upTime='" + upTime + '\'' +
                 ", url='" + url + '\'' +
                 ", like=" + like +
                 ", collect=" + collect +

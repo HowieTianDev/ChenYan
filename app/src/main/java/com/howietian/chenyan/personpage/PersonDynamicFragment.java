@@ -165,27 +165,30 @@ public class PersonDynamicFragment extends BaseFragment {
             @Override
             public void onLikeClick(final int position) {
                 if (MyApp.isLogin()) {
+                    ArrayList<String> mLikeIdList = new ArrayList<>();
                     final User currentUser = BmobUser.getCurrentUser(User.class);
                     final Dynamic dynamic = dynamicList.get(position);
-                    if (likeIdList != null) {
-                        likeIdList.clear();
-                    }
+
                     if (dynamic.getLikeId() != null) {
-                        likeIdList = dynamic.getLikeId();
+                        mLikeIdList.addAll(dynamic.getLikeId());
                     }
-                    likeIdList.add(currentUser.getObjectId());
-                    dynamic.setLikeId(likeIdList);
-                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
-                    dynamic.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                               Log.e("动态","点赞成功！");
-                            } else {
-                                showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
+                    if (!mLikeIdList.contains(currentUser.getObjectId())) {
+                        mLikeIdList.add(currentUser.getObjectId());
+                        dynamic.setLikeId(mLikeIdList);
+                        dynamicList.set(position, dynamic);
+                        dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                        dynamic.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    Log.e("动态", "点赞成功！");
+                                } else {
+                                    showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     jumpTo(LoginActivity.class, true);
                 }
@@ -194,29 +197,33 @@ public class PersonDynamicFragment extends BaseFragment {
             @Override
             public void onUnLikeClick(final int position) {
                 if (MyApp.isLogin()) {
+                    ArrayList<String> mLikeIdList = new ArrayList<>();
                     final User currentUser = BmobUser.getCurrentUser(User.class);
                     final Dynamic dynamic = dynamicList.get(position);
-                    if (likeIdList != null) {
-                        likeIdList.clear();
-                    }
+
 
                     if (dynamic.getLikeId() != null) {
-                        likeIdList = dynamic.getLikeId();
+                        mLikeIdList.addAll(dynamic.getLikeId());
                     }
-                    likeIdList.remove(currentUser.getObjectId());
 
-                    dynamic.setLikeId(likeIdList);
-                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
-                    dynamic.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                Log.e("动态","取消点赞成功！");
-                            } else {
-                                showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
+                    if (mLikeIdList.contains(currentUser.getObjectId())) {
+                        mLikeIdList.remove(currentUser.getObjectId());
+
+                        dynamic.setLikeId(mLikeIdList);
+                        dynamicList.set(position,dynamic);
+                        dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                        dynamic.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    Log.e("动态", "取消点赞成功！");
+                                } else {
+                                    showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     jumpTo(LoginActivity.class, true);
                 }
@@ -296,7 +303,7 @@ public class PersonDynamicFragment extends BaseFragment {
                         dynamicList.addAll(list);
                         dynamicAdapter.notifyDataSetChanged();
                     } else {
-                        showToast("当前没有数据");
+                        showToast(getString(R.string.no_data_dynamic));
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 } else {

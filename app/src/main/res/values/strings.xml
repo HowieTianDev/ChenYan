@@ -2,12 +2,22 @@
     <string name="app_name">辰言</string>
     <string name="square">首页</string>
     <string name="circle">圈子</string>
-    <string name="focus">聚焦</string>
-    <string name="rank">排行</string>
+    <string name="publish">发布</string>
+    <string name="competition">竞赛</string>
     <string name="me">我的</string>
     <string name="on_join">正在报名</string>
     <string name="end_join">报名截止</string>
     <string name="joined">已报名</string>
+
+
+    <!--Toast 提示语-->
+    <string name="no_data_article">小编正在努力赶稿中哼唧~</string>
+    <string name="no_data_activity">辰小言也在找更多的活动呀</string>
+    <string name="no_data_rank">都被你看光啦~</string>
+    <string name="no_data_dynamic">整个地球都没有动态啦</string>
+    <string name="no_data">真的没有了~</string>
+    <string name="no_data_club">你还没有加入社团哦~</string>
+    <string name="no_data_club_members">快让小伙伴加入你的社团吧~</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

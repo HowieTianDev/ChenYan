@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -158,27 +159,30 @@ public class MyDynnamicActivity extends BaseActivity {
             @Override
             public void onLikeClick(final int position) {
                 if (MyApp.isLogin()) {
+                    ArrayList<String> mLikeIdList = new ArrayList<>();
                     final User currentUser = BmobUser.getCurrentUser(User.class);
                     final Dynamic dynamic = dynamicList.get(position);
-                    if (likeIdList != null) {
-                        likeIdList.clear();
-                    }
+
                     if (dynamic.getLikeId() != null) {
-                        likeIdList = dynamic.getLikeId();
+                        mLikeIdList.addAll(dynamic.getLikeId());
                     }
-                    likeIdList.add(currentUser.getObjectId());
-                    dynamic.setLikeId(likeIdList);
-                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
-                    dynamic.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                               Log.e("动态","点赞成功！");
-                            } else {
-                                showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
+                    if (!mLikeIdList.contains(currentUser.getObjectId())) {
+                        mLikeIdList.add(currentUser.getObjectId());
+                        dynamic.setLikeId(mLikeIdList);
+                        dynamicList.set(position, dynamic);
+                        dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                        dynamic.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    Log.e("动态", "点赞成功！");
+                                } else {
+                                    showToast("点赞更新失败" + e.getMessage() + e.getErrorCode());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     jumpTo(LoginActivity.class, true);
                 }
@@ -187,29 +191,33 @@ public class MyDynnamicActivity extends BaseActivity {
             @Override
             public void onUnLikeClick(final int position) {
                 if (MyApp.isLogin()) {
+                    ArrayList<String> mLikeIdList = new ArrayList<>();
                     final User currentUser = BmobUser.getCurrentUser(User.class);
                     final Dynamic dynamic = dynamicList.get(position);
-                    if (likeIdList != null) {
-                        likeIdList.clear();
-                    }
+
 
                     if (dynamic.getLikeId() != null) {
-                        likeIdList = dynamic.getLikeId();
+                        mLikeIdList.addAll(dynamic.getLikeId());
                     }
-                    likeIdList.remove(currentUser.getObjectId());
 
-                    dynamic.setLikeId(likeIdList);
-                    dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
-                    dynamic.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                Log.e("动态","取消点赞成功！");
-                            } else {
-                                showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
+                    if (mLikeIdList.contains(currentUser.getObjectId())) {
+                        mLikeIdList.remove(currentUser.getObjectId());
+
+                        dynamic.setLikeId(mLikeIdList);
+                        dynamicList.set(position,dynamic);
+                        dynamicAdapter.notifyItemChanged(position, DynamicAdapter.REFRESH_PRAISE);
+                        dynamic.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    Log.e("动态", "取消点赞成功！");
+                                } else {
+                                    showToast("取消点赞更新失败" + e.getMessage() + e.getErrorCode());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     jumpTo(LoginActivity.class, true);
                 }
@@ -267,7 +275,7 @@ public class MyDynnamicActivity extends BaseActivity {
                         dynamicList.addAll(list);
                         dynamicAdapter.notifyDataSetChanged();
                     } else {
-                        showToast("当前没有数据");
+                        showToast(getString(R.string.no_data));
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 } else {
@@ -287,8 +295,8 @@ public class MyDynnamicActivity extends BaseActivity {
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();
@@ -368,8 +376,8 @@ public class MyDynnamicActivity extends BaseActivity {
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
         etComment.setHint("回复" + replyUser.getNickName() + ":");
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();

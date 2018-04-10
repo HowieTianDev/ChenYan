@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.howietian.chenyan.entities.DComment;
 import com.howietian.chenyan.entities.Rank;
 import com.howietian.chenyan.entities.User;
@@ -79,10 +80,10 @@ public class Main2Activity extends BaseActivity {
         BmobPushManager bmobPushManager = new BmobPushManager();
 
         BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-        String minstallationId = "9089598562007E18FA516D2239CEFF74";
+        String minstallationId = "323E469E8B94A931FDC067EA9D27D7C9";
         query.addWhereEqualTo("installationId", minstallationId);
         bmobPushManager.setQuery(query);
-        bmobPushManager.pushMessage("给oppo的消息", new PushListener() {
+        bmobPushManager.pushMessage(new Gson().toJson(BmobUser.getCurrentUser(User.class),User.class), new PushListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {

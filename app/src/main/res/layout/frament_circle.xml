@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     tools:context="com.howietian.chenyan.circle.CircleFragment">
 
     <android.support.design.widget.AppBarLayout
@@ -19,11 +19,21 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb_circle"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
+            android:layout_height="40dp"
             android:background="@color/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:title="圈子"
-            app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
+            app:titleTextColor="@color/colorPrimary">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="圈子"
+                android:textColor="@color/white"
+                android:textSize="@dimen/bodyLarge" />
+        </android.support.v7.widget.Toolbar>
 
 
     </android.support.design.widget.AppBarLayout>
@@ -35,14 +45,15 @@
         android:background="@color/white"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        app:srlPrimaryColor="@color/colorPrimary"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-<com.scwang.smartrefresh.header.PhoenixHeader
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:mhPrimaryColor="@color/colorPrimary"
-    />
+        app:srlPrimaryColor="@color/colorPrimary">
+
+        <com.scwang.smartrefresh.header.PhoenixHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mhPrimaryColor="@color/colorPrimary" />
+
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestedScrollView_circle"
             android:layout_width="match_parent"
@@ -57,7 +68,7 @@
                 <cn.bingoogolapple.bgabanner.BGABanner
                     android:id="@+id/bgaBanner"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="130dp"
                     android:background="@color/grey"
                     android:scaleType="fitXY"
                     android:visibility="visible"
@@ -86,7 +97,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/cv_complex"
+                                android:id="@+id/cv_school"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -96,9 +107,73 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="综合"
+                                android:text="学校"
                                 android:textColor="@color/white" />
                         </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_focus"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="聚焦"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_challenge"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="挑战"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_felling"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@color/blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="情感"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
 
                         <FrameLayout
                             android:layout_width="0dp"
@@ -120,70 +195,6 @@
                                 android:text="体育"
                                 android:textColor="@color/white" />
                         </FrameLayout>
-
-                        <FrameLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1">
-
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/cv_feeling"
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
-                                android:layout_gravity="center"
-                                android:src="@color/blue" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="情感"
-                                android:textColor="@color/white" />
-                        </FrameLayout>
-
-                        <FrameLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1">
-
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/cv_chinese"
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
-                                android:layout_gravity="center"
-                                android:src="@color/blue" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="国学"
-                                android:textColor="@color/white" />
-                        </FrameLayout>
-
-
-                        <FrameLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1">
-
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/cv_match"
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
-                                android:layout_gravity="center"
-                                android:src="@color/blue" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="竞赛"
-                                android:textColor="@color/white" />
-                        </FrameLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -198,7 +209,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/cv_star"
+                                android:id="@+id/cv_happy"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -208,7 +219,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="精华"
+                                android:text="娱乐"
                                 android:textColor="@color/white" />
                         </FrameLayout>
 
@@ -241,7 +252,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/cv_animation"
+                                android:id="@+id/cv_life"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -251,7 +262,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="动漫"
+                                android:text="生活"
                                 android:textColor="@color/white" />
                         </FrameLayout>
 
@@ -262,7 +273,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/cv_free"
+                                android:id="@+id/cv_match"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -272,7 +283,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="闲情"
+                                android:text="比赛"
                                 android:textColor="@color/white" />
                         </FrameLayout>
 
@@ -284,6 +295,7 @@
                             android:layout_weight="1">
 
                             <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/cv_study"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 android:layout_gravity="center"
@@ -293,7 +305,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="更多"
+                                android:text="学习"
                                 android:textColor="@color/white" />
                         </FrameLayout>
                     </LinearLayout>
@@ -316,6 +328,7 @@
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+
         <com.scwang.smartrefresh.layout.footer.BallPulseFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></com.scwang.smartrefresh.layout.footer.BallPulseFooter>
@@ -329,6 +342,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"
+        android:visibility="gone"
         fab:fab_colorNormal="@color/colorPrimary"
         fab:fab_colorPressed="@color/colorPrimary"
         fab:fab_colorRipple="@color/colorPrimaryDark" />

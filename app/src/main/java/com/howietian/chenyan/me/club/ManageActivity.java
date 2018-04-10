@@ -119,7 +119,7 @@ public class ManageActivity extends BaseActivity {
                         userList.addAll(list);
                         adapter.notifyDataSetChanged();
                     } else {
-                        showToast("服务器没有数据");
+                        showToast(getString(R.string.no_data_club_members));
                     }
                 } else {
                     showToast("访问服务器失败，稍后重试" + e.getMessage() + e.getErrorCode());

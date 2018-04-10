@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -311,7 +312,7 @@ public class ChooseCircleActivity extends BaseActivity {
                                     dynamicAdapter.notifyDataSetChanged();
 
                                 } else {
-                                    showToast("查询评论失败" + e.getMessage() + e.getErrorCode());
+                                    Log.e("choose_circle_activity", "查询评论失败" + e.getMessage() + e.getErrorCode());
                                 }
                             }
                         });
@@ -328,15 +329,15 @@ public class ChooseCircleActivity extends BaseActivity {
                         }
                     } else {
                         if (refreshType == LOAD_MORE) {
-                            showToast("没有更多数据了");
+                            showToast(getString(R.string.no_data_dynamic));
                             swipeRefreshLayout.finishLoadmore();
                         } else if (refreshType == PULL_REFRESH) {
-                            showToast("服务器没有数据");
+                            showToast("快来发一条动态吧~");
                             swipeRefreshLayout.finishRefresh();
                         }
                     }
                 } else {
-                    showToast("请求服务器异常" + e.getMessage() + "错误代码" + e.getErrorCode());
+                    showToast("请求服务器异常");
                     Log.e("HHH", e.getMessage() + "错误代码" + e.getErrorCode());
                     swipeRefreshLayout.finishRefresh();
                 }
@@ -353,8 +354,8 @@ public class ChooseCircleActivity extends BaseActivity {
 
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();
@@ -434,8 +435,8 @@ public class ChooseCircleActivity extends BaseActivity {
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         final EditText etComment = (EditText) view.findViewById(R.id.et_comment_text);
         etComment.setHint("回复" + replyUser.getNickName() + ":");
-        Button btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ImageView ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = etComment.getText().toString();

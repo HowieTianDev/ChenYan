@@ -94,7 +94,7 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     private RecyclerView.LayoutManager manager;
     //    当前操作的文章对象
     private Article article;
-    private Button btnSend;
+    private ImageView ivSend;
     private EditText etComment;
     private PopupWindow popupWindow;
 
@@ -105,14 +105,8 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     boolean isCollect = false;
     boolean isLike = false;
     //    评论的数量
-    String  commentNum = "";
+    String commentNum = "";
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     public void setMyContentView() {
@@ -124,20 +118,55 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
     public void init() {
         super.init();
         back();
+        if (getIntent() != null) {
+            if (getIntent().getStringExtra(HomeFragment.FROM_BANNER) != null) {
+                String articleId = getIntent().getStringExtra(HomeFragment.FROM_BANNER);
+                BmobQuery<Article> query = new BmobQuery<>();
+                query.addWhereEqualTo("objectId", articleId);
+                query.findObjects(new FindListener<Article>() {
+                    @Override
+                    public void done(List<Article> list, BmobException e) {
 
+                        article = list.get(0);
+
+                        queryCommentList();
+
+                        likeIdList = article.getLikeIdList();
+
+                        if (likeIdList == null) {
+                            likeIdList = new ArrayList<>();
+                        }
+
+                        collectIdList = article.getCollectIdList();
+
+                        if (collectIdList == null) {
+                            collectIdList = new ArrayList<>();
+                        }
+
+                        initDatas();
+                    }
+                });
+            } else {
+                Intent intent = getIntent();
+                String msg = intent.getStringExtra(ArticleFragment.FROM_ARTICLE);
+                article = new Gson().fromJson(msg, Article.class);
+
+                initDatas();
+
+                queryCommentList();
+                likeIdList = article.getLikeIdList();
+                if (likeIdList == null) {
+                    likeIdList = new ArrayList<>();
+                }
+
+                collectIdList = article.getCollectIdList();
+                if (collectIdList == null) {
+                    collectIdList = new ArrayList<>();
+                }
+            }
+        }
         commentList.setNestedScrollingEnabled(false);
-        initDatas();
 
-        queryCommentList();
-        likeIdList = article.getLikeIdList();
-        if(likeIdList == null){
-            likeIdList = new ArrayList<>();
-        }
-
-        collectIdList = article.getCollectIdList();
-        if(collectIdList == null){
-            collectIdList = new ArrayList<>();
-        }
 
     }
 
@@ -149,35 +178,31 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
             public void onClick(View view) {
                 Intent intent = new Intent();
                 commentNum = tvCommentNum.getText().toString();
-                intent.putExtra("commentNum",commentNum);
-                intent.putStringArrayListExtra("likeIdList",likeIdList);
-                intent.putStringArrayListExtra("collectIdList",collectIdList);
-                setResult(RESULT_OK,intent);
+                intent.putExtra("commentNum", commentNum);
+                intent.putStringArrayListExtra("likeIdList", likeIdList);
+                intent.putStringArrayListExtra("collectIdList", collectIdList);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
 
     }
-//重写返回事件，将数据返回上一级页面,去掉superonbackpressed(),才能传Intent。。。。
+
+    //重写返回事件，将数据返回上一级页面,去掉superonbackpressed(),才能传Intent。。。。
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         commentNum = tvCommentNum.getText().toString();
-        intent.putExtra("commentNum",commentNum);
-        intent.putStringArrayListExtra("likeIdList",likeIdList);
-        intent.putStringArrayListExtra("collectIdList",collectIdList);
-        setResult(RESULT_OK,intent);
+        intent.putExtra("commentNum", commentNum);
+        intent.putStringArrayListExtra("likeIdList", likeIdList);
+        intent.putStringArrayListExtra("collectIdList", collectIdList);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
     private void initDatas() {
-        Intent intent = getIntent();
-        String msg = intent.getStringExtra(ArticleFragment.FROM_ARTICLE);
-        article = new Gson().fromJson(msg, Article.class);
 
-        tvTitle.setText(article.getTitle());
-        tvUpTime.setText(article.getUpTime());
-        loadImage(article.getPhoto().getUrl(), ivImage);
+
         wbArticle.loadUrl(article.getUrl());
         // 设置webview只能用内置浏览器打开
         WebSettings wSet = wbArticle.getSettings();
@@ -191,10 +216,10 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
 
         tvContent.setText(article.getContent());
         if (article.getCommentNum() != null) {
-            tvCommentNum.setText(article.getCommentNum()+"");
+            tvCommentNum.setText(article.getCommentNum() + "");
         }
         if (article.getLikeIdList() != null) {
-            tvLikeNum.setText(article.getLikeIdList().size()+"");
+            tvLikeNum.setText(article.getLikeIdList().size() + "");
         }
 
 
@@ -269,7 +294,7 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
 
 //                   更新该推文的评论数量
                     article.setCommentNum(list.size());
-                    tvCommentNum.setText( list.size() +"");
+                    tvCommentNum.setText(list.size() + "");
                     article.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
@@ -400,7 +425,7 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         }
         likeIdList.add(user.getObjectId());
         article.setLikeIdList(likeIdList);
-        tvLikeNum.setText(likeIdList.size()+"");
+        tvLikeNum.setText(likeIdList.size() + "");
         ivLike.setImageResource(R.drawable.ic_thumb_up_orange_500_24dp);
         isLike = true;
         article.update(new UpdateListener() {
@@ -408,10 +433,10 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
             public void done(BmobException e) {
                 if (e == null) {
                     //queryLikes();
-                   Log.e(TAG,"文章点赞成功！");
+                    Log.e(TAG, "文章点赞成功！");
 
                 } else {
-                   Log.e(TAG,"文章点赞失败！"+e.getErrorCode()+e.getMessage());
+                    Log.e(TAG, "文章点赞失败！" + e.getErrorCode() + e.getMessage());
                 }
             }
         });
@@ -430,16 +455,16 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         }
         likeIdList.remove(BmobUser.getCurrentUser(User.class).getObjectId());
         article.setLikeIdList(likeIdList);
-        tvLikeNum.setText( likeIdList.size() + "");
+        tvLikeNum.setText(likeIdList.size() + "");
         ivLike.setImageResource(R.drawable.ic_thumb_up_grey_500_24dp);
         isLike = false;
         article.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    Log.e(TAG,"文章取消点赞成功！");
+                    Log.e(TAG, "文章取消点赞成功！");
                 } else {
-                    Log.e(TAG,"文章取消点赞失败！");
+                    Log.e(TAG, "文章取消点赞失败！");
                 }
             }
         });
@@ -453,8 +478,8 @@ public class ArticleDetailActivity extends BaseActivity implements View.OnClickL
         View view = LayoutInflater.from(this).inflate(R.layout.comment_view, null);
 
         etComment = (EditText) view.findViewById(R.id.et_comment_text);
-        btnSend = (Button) view.findViewById(R.id.btn_send);
-        btnSend.setOnClickListener(this);
+        ivSend = (ImageView) view.findViewById(R.id.btn_send);
+        ivSend.setOnClickListener(this);
 
         popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 //      弹出动画

@@ -19,6 +19,12 @@ public class MActivity extends BmobObject {
     private Integer commentNum;
     private String deadline;
     private String upTime;
+
+    private String holder;
+    private String place;
+    private String activityTime;
+    private String phone;
+
     private BmobRelation like;
     private BmobRelation collect;
     private BmobRelation join;
@@ -30,6 +36,38 @@ public class MActivity extends BmobObject {
     private ArrayList<String> joinIdList;
 
     public MActivity() {
+    }
+
+    public String getHolder() {
+        return holder;
+    }
+
+    public void setHolder(String holder) {
+        this.holder = holder;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getActivityTime() {
+        return activityTime;
+    }
+
+    public void setActivityTime(String activityTime) {
+        this.activityTime = activityTime;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public User getCurrentUser() {

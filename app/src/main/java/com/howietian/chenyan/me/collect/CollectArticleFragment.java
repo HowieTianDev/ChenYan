@@ -78,6 +78,13 @@ public class CollectArticleFragment extends BaseFragment {
         swipeRefreshLayout.setRefreshing(true);
         manager = new LinearLayoutManager(getContext());
 
+
+    }
+
+    //   从详情页返回时，自动刷新
+    @Override
+    public void onResume() {
+        super.onResume();
         getData();
         articleAdapter = new ArticleAdapter(getContext(), articles);
         recyclerView.setLayoutManager(manager);
@@ -86,14 +93,6 @@ public class CollectArticleFragment extends BaseFragment {
 
         setItemClick();
         refresh();
-    }
-
-    //   从详情页返回时，自动刷新
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-        Log.e("TAG", "onReume");
     }
 
     private void setItemClick() {
@@ -155,7 +154,7 @@ public class CollectArticleFragment extends BaseFragment {
 
 //                        查询到无数据
                     } else {
-                        showToast("服务器没有数据");
+                        showToast(getString(R.string.no_data));
                     }
                 } else {
                     showToast("请求服务器异常" + e.getMessage() + "错误代码" + e.getErrorCode());

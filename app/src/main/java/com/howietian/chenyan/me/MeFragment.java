@@ -1,6 +1,8 @@
 package com.howietian.chenyan.me;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,10 +18,14 @@ import android.widget.TextView;
 import com.howietian.chenyan.BaseFragment;
 import com.howietian.chenyan.R;
 import com.howietian.chenyan.app.MyApp;
+import com.howietian.chenyan.db.DbUtils;
 import com.howietian.chenyan.entities.User;
 import com.howietian.chenyan.entrance.LoginActivity;
 import com.howietian.chenyan.me.club.MyClubActivity;
 import com.howietian.chenyan.me.collect.MyCollectActivity;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,6 +68,8 @@ public class MeFragment extends BaseFragment {
     ImageView ivClub;
     @Bind(R.id.iv_msg_read)
     ImageView ivMsgRead;
+    @Bind(R.id.smartRefreshLayout)
+    SmartRefreshLayout smartRefreshLayout;
 
     private static final String ME_FRAGMENT = "me_fragment";
 
@@ -88,6 +96,16 @@ public class MeFragment extends BaseFragment {
     @Override
     public void init() {
         super.init();
+
+        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                initDatas();
+                smartRefreshLayout.finishRefresh();
+            }
+        });
+
+        smartRefreshLayout.setEnableLoadmore(false);
 
     }
 
@@ -120,13 +138,14 @@ public class MeFragment extends BaseFragment {
             }
 
             queryFanNum(user);
-            if (MyApp.userList.size() > 0) {
+            if (DbUtils.isHasMsg(getContext())) {
                 ivMsgRead.setVisibility(View.VISIBLE);
             } else {
                 ivMsgRead.setVisibility(View.GONE);
             }
-        } else {
 
+        } else {
+            ivMsgRead.setVisibility(View.GONE);
             avatar.setImageResource(R.drawable.ic_account_circle_blue_grey_100_36dp);
             nickName.setText("请登录");
             tvFan.setText("0");
@@ -255,11 +274,27 @@ public class MeFragment extends BaseFragment {
     @OnClick(R.id.tv_logout)
     public void logout() {
         if (MyApp.isLogin()) {
-            BmobUser.logOut();
-            initDatas();
-            showToast("已成功退出");
-            ivClub.setVisibility(View.GONE);
-            ivMsgRead.setVisibility(View.GONE);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("温馨提示:")
+                    .setMessage("确认要退出吗?")
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    BmobUser.logOut();
+                    initDatas();
+                    showToast("已成功退出");
+                    ivClub.setVisibility(View.GONE);
+                    ivMsgRead.setVisibility(View.GONE);
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
         } else {
             return;
         }
