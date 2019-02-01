@@ -80,6 +80,7 @@ public class LoginActivity extends BaseActivity {
         super.init();
         setSupportActionBar(tbLogin);
         initListener();
+
 //      从注册界面跳转过来,自动填写用户名和密码
         if (getIntent() != null) {
             Intent intent = getIntent();

@@ -317,7 +317,6 @@ public class RegisterActivity extends BaseActivity {
         public MyCounter(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
-
         //倒计时过程调用的方法
         @Override
         public void onTick(long l) {
@@ -325,14 +324,12 @@ public class RegisterActivity extends BaseActivity {
             tvRequestCode.setClickable(false);
             tvRequestCode.setBackground(getResources().getDrawable(R.drawable.sms_grey_bg));
         }
-
         //倒计时结束的方法
         @Override
         public void onFinish() {
             tvRequestCode.setText("重新发送");
             tvRequestCode.setClickable(true);
             tvRequestCode.setBackground(getResources().getDrawable(R.drawable.sms_dark_bg));
-
         }
     }
 
